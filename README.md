@@ -11,18 +11,18 @@ Resets the currently stored data.
 
 `//parse report [stat] [chatmode]`
 Reports stat to party. If [stat] not provided, will report total damage. If [chatmode] not provided, will print to personal chatlog. Valid stats include, but aren't limited to:
-*damage
-*melee|ranged (% reported is hit rate)
-*crit|r_crit
-*block|parry|evade
-*ws|ja|spell (reports averages for each individual spell)
+* damage
+* melee|ranged (% reported is hit rate)
+* crit|r_crit
+* block|parry|evade
+* ws|ja|spell (reports averages for each individual spell)
 
 Valid chatmodes include:
-*p: party
-*s: say
-*l: linkshell
-*l2: linkshell2
-*t [player name]: tell
+* p: party
+* s: say
+* l: linkshell
+* l2: linkshell2
+* t [player name]: tell
 
 `//parse filter add|remove|clear`
 Filters data by monster name according to substrings.
