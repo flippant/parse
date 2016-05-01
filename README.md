@@ -10,11 +10,11 @@ Pauses the parser.
 Resets the currently stored data.
 
 `//parse report [stat] [chatmode]`
-Reports stat to party. If [stat] not provided, will report total damage. If [chatmode] not provided, will print to personal chatlog. Valid stats include, but aren't limited to:
-* damage
+Reports stat to party. If [stat] not provided, will report damage. If [chatmode] not provided, will print to personal chatlog. Valid stats include, but aren't limited to:
+* damage (% reported is player's portion of total damage)
 * melee | ranged (% reported is hit rate)
 * crit | r_crit
-* block | parry | evade
+* block | parry | evade (% reported is based on action hierarchy; for example, block % excludes evades and parry % excludes both evades and non-engaged hits taken)
 * ws | ja | spell (reports averages for total category, and each individual spell)
 
 Valid chatmodes include:
