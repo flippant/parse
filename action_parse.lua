@@ -4,6 +4,9 @@
 
 	-- Test spike damage
 	-- Weird SC bug (also occurs in SB) 289
+	-- Need to still count strikes that are blinked/parried by mob for multihit_count
+	-- Parry % is definitely not working
+	-- Need to count kicks
 
 ]]
 
@@ -19,9 +22,9 @@ function parse_action_packet(act)
 		return
 	end
 	
-	local multihit_count = nil
+	local multihit_count,multihit_count2 = nil
 	for i,targ in pairs(act.targets) do
-		multihit_count = 0
+		multihit_count,multihit_count2 = 0,0
         for n,m in pairs(targ.actions) do
             if m.message ~= 0 and res.action_messages[m.message] ~= nil then	
 				target = player_info(targ.id)
@@ -83,13 +86,25 @@ function parse_action_packet(act)
 
 					if m.message == 1 then --melee
 						register_data(mob_player_table,'melee',m.param)
-						multihit_count = multihit_count + 1
+						if m.animation==0 then
+							multihit_count = multihit_count + 1
+						elseif m.animation==1 then
+							multihit_count2 = multihit_count2 + 1
+						end
 					elseif m.message == 67 then --crit
 						register_data(mob_player_table,'crit',m.param)
-						multihit_count = multihit_count + 1
+						if m.animation==0 then
+							multihit_count = multihit_count + 1
+						elseif m.animation==1 then
+							multihit_count2 = multihit_count2 + 1
+						end						
 					elseif m.message == 15 or m.message == 63 then --miss
 						register_data(mob_player_table,'miss')
-						multihit_count = multihit_count + 1
+						if m.animation==0 then
+							multihit_count = multihit_count + 1
+						elseif m.animation==1 then
+							multihit_count2 = multihit_count2 + 1
+						end
 					elseif T{352, 576, 577}:contains(m.message) then --ranged
 						register_data(mob_player_table,'ranged',m.param)
 					elseif m.message == 353 then --ranged crit
@@ -139,6 +154,9 @@ function parse_action_packet(act)
 	
 	if multihit_count and multihit_count > 0 then
 		register_data(mob_player_table,tostring(multihit_count))
+	end
+	if multihit_count2 and multihit_count2 > 0 then
+		register_data(mob_player_table,tostring(multihit_count2))
 	end
 
 	if PC_name and update_tracker == update_interval then

@@ -2,8 +2,6 @@
 
 	-- Implement player filtering
 	-- Implement temporary mob_filters variable for reporting function
-	
-	-- Want to do this better, but using recursion takes up too much computing power...
 
 ]]
 
@@ -24,13 +22,13 @@ percent_table = {
 		ws = S{"ws_miss"},
 		ja = S{"ja_miss"},
 		
-		[2] = S{1},
-		[3] = S{1},
-		[4] = S{1},
-		[5] = S{1},
-		[6] = S{1},
-		[7] = S{1},
-		[8] = S{1},
+		['2'] = S{'1'},
+		['3'] = S{'1'},
+		['4'] = S{'1'},
+		['5'] = S{'1'},
+		['6'] = S{'1'},
+		['7'] = S{'1'},
+		['8'] = S{'1'},
 	}
 
 -- Returns a table of players	
