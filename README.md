@@ -14,6 +14,7 @@ Reports stat to party. If [stat] not provided, will report damage. If [chatmode]
 * damage (% reported is player's portion of total damage)
 * melee | ranged (% reported is hit rate)
 * crit | r_crit
+* multi (reports percent and cardinality of double attacks, triple attacks, etc., but does not distinguish against OAX)
 * block | parry | evade (% reported is based on action hierarchy; for example, block % excludes evades and parry % excludes both evades and non-engaged hits taken)
 * ws | ja | spell (reports averages for total category, and each individual spell)
 
@@ -41,3 +42,6 @@ Saves raw data as a tab-delimited file to the data/parse folder. Note that as ra
 
 `//parse export|import [file name]`
 Exports/imports XML data to/from the data/export folder. Imported data is merged with any current in-game data.
+
+`//parse list mobs|players`
+Lists mobs and players that are indexed in database.
