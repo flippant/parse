@@ -1,4 +1,4 @@
-_addon.version = '1.1'
+_addon.version = '1.2'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -43,7 +43,8 @@ default_settings.display.melee = {
 			["miss"] = S{'tally'},
 			["crit"] = S{'percent'},
 			["ws"] = S{'avg'},
-			["ja"] = S{'avg'}
+			["ja"] = S{'avg'},
+			["multi"] = S{'avg'}
 		},
 		["bg"] = {visible=true,alpha=50,red=0,green=0,blue=0},
 		["text"] = {size=10,font="consolas",alpha=255,red=255,green=255,blue=255,stroke={width=1,alpha=200,red=0,green=0,blue=0}},
@@ -122,6 +123,7 @@ stat_types.melee = S{"melee","miss","crit"}
 stat_types.ranged = S{"ranged","r_miss","r_crit"}
 stat_types.category = S{"ws","ja","spell","ws_miss","ja_miss"}
 stat_types.other = S{"spike","sc","add"}
+stat_types.multi = S{'1','2','3','4','5','6','7','8'}
 
 require 'utility'
 require 'retrieval'
@@ -134,7 +136,6 @@ ActionPacket.open_listener(parse_action_packet)
 init_boxes()
 
 
-
 windower.register_event('addon command', function(...)
     local args = {...}
     if args[1] == 'report' then
@@ -144,7 +145,7 @@ windower.register_event('addon command', function(...)
 		update_texts()
 	elseif (args[1] == 'list' or args[1] == 'l') then
 		print_list(args[2])
-	elseif (args[1] == 'show' or args[1] == 's') then
+	elseif (args[1] == 'show' or args[1] == 's' or args[1] == 'display' or args[1] == 'd') then
 		toggle_box(args[2])
 		update_texts()
 	elseif args[1] == 'reset' then
@@ -166,6 +167,8 @@ windower.register_event('addon command', function(...)
 	elseif args[1] == 'import' and args[2] then
 		import_parse(args[2])
 		update_texts()
+	elseif args[1] == 'test' and args[2] then
+		print()
 	else
 		message('Command was not found. Valid commands:')
 		message('report [stat] [chatmode] :: Reports stat to designated chatmode. Defaults to damage.')
@@ -261,8 +264,10 @@ function get_filters()
 end
 
 function print_list(list_type) 
-	if not list_type or list_type=="monsters" then 
+	if not list_type or list_type=="monsters" or list_type=="m" then 
 		list_type="mobs" 
+	elseif list_type=="p" then
+		list_type="players"
 	end
 	
 	local lst = S{}

@@ -1,3 +1,5 @@
+-- Credit to Byrth for many of the functions here
+
 --[[ TO DO
 
 	-- Test spike damage
@@ -17,13 +19,15 @@ function parse_action_packet(act)
 		return
 	end
 	
+	local multihit_count = nil
 	for i,targ in pairs(act.targets) do
+		multihit_count = 0
         for n,m in pairs(targ.actions) do
             if m.message ~= 0 and res.action_messages[m.message] ~= nil then	
 				target = player_info(targ.id)
 				-- if mob is actor, record defensive data
 				if act.actor.type == 'mob' and settings.record[target.type] then
-					NPC_name = nickname(act.actor.name:gsub(" ","_"))
+					NPC_name = nickname(act.actor.name:gsub(" ","_"):gsub("'",""))
 					PC_name = construct_PC_name(target)
 					if target.name == player.name and settings.index_shield and get_shield() then
 						PC_name = PC_name:sub(1, 6)..'-'..get_shield():sub(1, 3)..''
@@ -70,7 +74,7 @@ function parse_action_packet(act)
 
 				-- if player is actor, record offensive data
 				elseif target.type == 'mob' and settings.record[act.actor.type] then
-					NPC_name = nickname(target.name:gsub(" ","_"))
+					NPC_name = nickname(target.name:gsub(" ","_"):gsub("'",""))
 					PC_name = construct_PC_name(act.actor)
 					if not database[NPC_name] or not database[NPC_name][PC_name] then						
 						init_mob_player_table(NPC_name,PC_name)
@@ -79,10 +83,13 @@ function parse_action_packet(act)
 
 					if m.message == 1 then --melee
 						register_data(mob_player_table,'melee',m.param)
+						multihit_count = multihit_count + 1
 					elseif m.message == 67 then --crit
 						register_data(mob_player_table,'crit',m.param)
+						multihit_count = multihit_count + 1
 					elseif m.message == 15 or m.message == 63 then --miss
 						register_data(mob_player_table,'miss')
+						multihit_count = multihit_count + 1
 					elseif T{352, 576, 577}:contains(m.message) then --ranged
 						register_data(mob_player_table,'ranged',m.param)
 					elseif m.message == 353 then --ranged crit
@@ -128,6 +135,10 @@ function parse_action_packet(act)
 				end				
 			end
 		end
+	end
+	
+	if multihit_count and multihit_count > 0 then
+		register_data(mob_player_table,tostring(multihit_count))
 	end
 
 	if PC_name and update_tracker == update_interval then

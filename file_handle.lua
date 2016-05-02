@@ -77,12 +77,13 @@ function to_xml(t,indent_string)
 	local indent = indent_string or '    '
 	local xml_string = ""
 	for key,value in pairs(t) do
+		key = tostring(key)
 		xml_string = xml_string .. indent .. '<'..key:gsub(" ","_")..'>'		
 		if type(value)=='number' then
 			xml_string = xml_string .. value
 			xml_string = xml_string .. '</'..key:gsub(" ","_")..'>\n'
 		elseif type(value)=='table' then
-			xml_string = xml_string .. '\n' .. to_xml(t[key],indent..'    ')
+			xml_string = xml_string .. '\n' .. to_xml(value,indent..'    ')
 			xml_string = xml_string .. indent .. '</'..key:gsub(" ","_")..'>\n'
 		end
 		

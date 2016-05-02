@@ -22,7 +22,15 @@ percent_table = {
 		r_crit = S{"ranged"},
 		
 		ws = S{"ws_miss"},
-		ja = S{"ja_miss"}
+		ja = S{"ja_miss"},
+		
+		[2] = S{1},
+		[3] = S{1},
+		[4] = S{1},
+		[5] = S{1},
+		[6] = S{1},
+		[7] = S{1},
+		[8] = S{1},
 	}
 
 -- Returns a table of players	
@@ -63,6 +71,10 @@ function get_sorted_players(sort_value,limit)
 	if not limit then
 		limit = 20
 	end
+	
+	if S{'multi','1','2','3','4','5','6','7','8'}:contains(sort_value) then
+		sort_value = 'melee'
+	end
 
 	local sorted_player_table = L{}
 	
@@ -86,7 +98,7 @@ function get_sorted_players(sort_value,limit)
 					top_result = get_player_stat_avg(sort_value,player)
 					player_name = player
 				end				
-			elseif S{'hit','miss','r_miss','spike'} then -- sort by tally
+			elseif S{'hit','miss','r_miss','spike'}:contains(sort_value) then -- sort by tally
 				if get_player_stat_tally(sort_value,player) > top_result and not sorted_player_table:contains(player) then
 					top_result = get_player_stat_tally(sort_value,player)
 					player_name = player
@@ -192,6 +204,7 @@ function get_player_spell_table(spell_type,mob_filters)
 end
 
 function get_player_stat_tally(stat,plyr,mob_filters)
+	if type(stat)=='number' then stat=tostring(stat) end
 	local tally = 0
 	for mob,mob_table in pairs(database) do
 		if check_filters('mob',mob) then
@@ -216,6 +229,7 @@ function get_player_stat_tally(stat,plyr,mob_filters)
 end
 
 function get_player_stat_damage(stat,plyr,mob_filters)
+	if type(stat)=='number' then stat=tostring(stat) end
 	local damage = 0
 	for mob,mob_table in pairs(database) do
 		if check_filters('mob',mob) then
@@ -240,28 +254,37 @@ function get_player_stat_damage(stat,plyr,mob_filters)
 end
 
 function get_player_stat_avg(stat,plyr,mob_filters)
-	local damage,tally = 0,0
+	if type(stat)=='number' then stat=tostring(stat) end
+	local total,tally,result,digits = 0,0,0,0
 	
-	damage = get_player_stat_damage(stat,plyr,mob_filters)
-	tally = get_player_stat_tally(stat,plyr,mob_filters)
+	if stat=='multi' then
+		digits = 2
+		for i,__ in pairs(stat_types.multi) do
+			total = total + (get_player_stat_tally(i,plyr,mob_filters) * tonumber(i))
+			tally = tally + get_player_stat_tally(i,plyr,mob_filters)
+		end
+	else	
+		digits = 0
+		total = get_player_stat_damage(stat,plyr,mob_filters)
+		tally = get_player_stat_tally(stat,plyr,mob_filters)		
+	end
 
-	if tally == 0 then return nil end
-	
-	digits = 0
+	if tally == 0 then return '--' end
 
-	shift = 10 ^ digits
-	result = math.floor( (damage / tally)*shift + 0.5 ) / shift
+	local shift = 10 ^ digits
+	result = math.floor( (total / tally)*shift + 0.5 ) / shift
 	
 	return result
 end
 
 function get_player_stat_percent(stat,plyr,mob_filters)
+	if type(stat)=='number' then stat=tostring(stat) end
 	if stat=="damage" then
 		dividend = get_player_damage(plyr,mob_filters)
 		divisor = get_player_damage(nil,mob_filters)
 	else
 		if not percent_table[stat] then
-			return '--'
+			return nil
 		end
 		dividend = get_player_stat_tally(stat,plyr,mob_filters)
 		divisor = get_player_stat_tally(stat,plyr,mob_filters)
@@ -269,7 +292,7 @@ function get_player_stat_percent(stat,plyr,mob_filters)
 		if percent_table[stat] then
 			for v,__ in pairs(percent_table[stat]) do
 				-- if string begins with +
-				if v:startswith('+') then
+				if type(v)=='string' and v:startswith('+') then
 					dividend = dividend + get_player_stat_tally(string.sub(v,2),plyr,mob_filters)
 					divisor = divisor + get_player_stat_tally(string.sub(v,2),plyr,mob_filters)
 				else

@@ -1,6 +1,7 @@
 --[[ TO DO
 
 	-- Specific handling of acc/racc to be more user-friendly
+	-- Specific handling of da/ta/qa/ua/sa/ea/oa?
 
 ]]
 
@@ -57,12 +58,26 @@ function report_data(stat,chatmode,chattarget)
 			end
 			report_string = report_string .. (' | ')			
 		end
+	elseif get_stat_type(stat)=='multi' or stat=='multi' then
+		report_string = report_string .. '[Reporting multihit stats] '..update_filters()..' | '
+		for player in sorted_players:it() do
+			report_string = report_string .. (player..': ')
+			report_string = report_string .. ('{Total} ')
+			report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ')			
+			for i=1,8,1 do
+				report_string = report_string .. ('['..i..'-hit] ')
+				if get_player_stat_percent(i,player) then report_string = report_string .. (''..get_player_stat_percent(tostring(i),player)..'% ') end		
+				report_string = report_string .. ('('..get_player_stat_tally(tostring(i),player)..'s)')
+				report_string = report_string .. (', ')
+			end
+			report_string = report_string .. (' | ')
+		end
 	elseif get_stat_type(stat) then
 		report_string = report_string .. '[Reporting '..stat..' stats] '..update_filters()..' | '
 		for player in sorted_players:it() do
 			report_string = report_string .. (player..': ')
 			--report_string = report_string .. (get_player_stat_damage(stat,player)..' ')
-			report_string = report_string .. (''..get_player_stat_percent(stat,player)..'% ')
+			if get_player_stat_percent(stat,player) then report_string = report_string .. (''..get_player_stat_percent(stat,player)..'% ') end
 			report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ')			
 			report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s)')
 			report_string = report_string .. (', ')
