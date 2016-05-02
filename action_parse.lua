@@ -2,10 +2,8 @@
 
 --[[ TO DO
 
-	-- Test spike damage
 	-- Weird SC bug (also occurs in SB) 289
 	-- Need to still count strikes that are blinked/parried by mob for multihit_count
-	-- Parry % is definitely not working
 	-- Need to count kicks
 
 ]]
@@ -46,22 +44,22 @@ function parse_action_packet(act)
 						init_mob_player_table(NPC_name,PC_name)
 					end
 					mob_player_table = database[NPC_name][PC_name]
-					
+
 					if m.reaction == 12 and act.category == 1 then  --block
 						register_data(mob_player_table,'block',m.param)
-						if player.status == 1 then
+						if target.status == 1 then
 							register_data(mob_player_table,'nonparry')
 						end
 					elseif m.reaction == 11 and act.category == 1 then  --parry
 						register_data(mob_player_table,'parry')
 					elseif m.message == 1 then --hit
 						register_data(mob_player_table,'hit',m.param)
-						if player.status == 1 then
+						if target.status == 1 then
 							register_data(mob_player_table,'nonparry')
 						end
 					elseif m.message == 67 then --crit
 						register_data(mob_player_table,'hit',m.param)
-						if player.status == 1 then
+						if target.status == 1 then
 							register_data(mob_player_table,'nonparry')
 						end
 					elseif m.message == 106 then  --intimidate
@@ -124,6 +122,7 @@ function parse_action_packet(act)
 					elseif m.message == 2 or m.message == 227 or m.message == 252 or m.message == 265 or m.message == 379 then --spell
 						register_data(mob_player_table,'spell',m.param,'spell',act.param)
 						aoe_type = 'spell'
+						debug(act.param)
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
 						register_data(mob_player_table,'ja',m.param,'ja',act.param)
 						aoe_type = 'ja'
@@ -135,7 +134,8 @@ function parse_action_packet(act)
 					elseif m.message == 77 then --Sange
 						register_data(mob_player_table,'ja',m.param,'ja','Sange')
 					elseif m.message == 264 then --AoE hit
-						register_data(mob_player_table,aoe_type,m.param,'ws',act.param)
+						register_data(mob_player_table,aoe_type,m.param,aoe_type,act.param)
+						debug(act.param)
 					end
 
 					if m.has_add_effect then
@@ -327,5 +327,5 @@ function player_info(id)
         end
     end
     if not typ then typ = 'debug' end
-    return {name=player_table.name,id=id,type=typ,owner=(owner or nil)}
+    return {name=player_table.name,status=player_table.status,id=id,type=typ,owner=(owner or nil)}
 end
