@@ -23,6 +23,8 @@ function parse_action_packet(act)
 	end
 	
 	local multihit_count,multihit_count2 = nil
+	local aoe_type = 'ws'
+	
 	for i,targ in pairs(act.targets) do
 		multihit_count,multihit_count2 = 0,0
         for n,m in pairs(targ.actions) do
@@ -113,24 +115,27 @@ function parse_action_packet(act)
 						register_data(mob_player_table,'r_crit',m.param)
 					elseif m.message == 354 then --ranged miss
 						register_data(mob_player_table,'r_miss')
-					elseif m.message == 185 or m.message == 197 then --WS hit
+					elseif m.message == 185 or m.message == 197 or m.message == 187 then --WS hit / drain
 						register_data(mob_player_table,'ws',m.param,'ws',act.param)
-					elseif m.message == 264 then --AoE WS hit
-						register_data(mob_player_table,'ws',m.param,'ws',act.param)
-					elseif m.message == 187 then --WS drain
-						register_data(mob_player_table,'ws',m.param,'ws',act.param)
+						aoe_type = 'ws'
 					elseif m.message == 188 then --WS miss
 						register_data(mob_player_table,'ws_miss',nil,'ws',act.param)
+						aoe_type = 'ws'
 					elseif m.message == 2 or m.message == 227 or m.message == 252 or m.message == 265 or m.message == 379 then --spell
 						register_data(mob_player_table,'spell',m.param,'spell',act.param)
+						aoe_type = 'spell'
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
 						register_data(mob_player_table,'ja',m.param,'ja',act.param)
+						aoe_type = 'ja'
 					elseif m.message == 158 or m.message == 324 then --JA miss
 						register_data(mob_player_table,'ja_miss',m.param,'ja',act.param)
+						aoe_type = 'ja'
 					elseif m.message == 157 then --Barrage
 						register_data(mob_player_table,'ja',m.param,'ja','Barrage')
 					elseif m.message == 77 then --Sange
 						register_data(mob_player_table,'ja',m.param,'ja','Sange')
+					elseif m.message == 264 then --AoE hit
+						register_data(mob_player_table,aoe_type,m.param,'ws',act.param)
 					end
 
 					if m.has_add_effect then
