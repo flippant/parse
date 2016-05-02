@@ -49,7 +49,7 @@ function report_data(stat,chatmode,chattarget)
 		for player in sorted_players:it() do
 			report_string = report_string .. (player..': ')
 			report_string = report_string .. ('{Total} ')
-			report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ')			
+			if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	
 			report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s) ')
 			for spell,spell_table in pairs(player_spell_table[player]) do	
 				report_string = report_string .. ('['..spell..'] ')
@@ -78,7 +78,7 @@ function report_data(stat,chatmode,chattarget)
 			report_string = report_string .. (player..': ')
 			--report_string = report_string .. (get_player_stat_damage(stat,player)..' ')
 			if get_player_stat_percent(stat,player) then report_string = report_string .. (''..get_player_stat_percent(stat,player)..'% ') end
-			report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ')			
+			if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end		
 			report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s)')
 			report_string = report_string .. (', ')
 		end

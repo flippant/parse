@@ -282,6 +282,7 @@ function print_list(list_type)
 	
 	if lst:length()==0 then message('No data found. Nothing to list!') return end
 	
+	lst['n'] = nil
 	local msg = ""
 	for __,i in pairs(lst) do
 		msg = msg .. i .. ', '

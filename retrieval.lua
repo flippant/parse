@@ -268,7 +268,7 @@ function get_player_stat_avg(stat,plyr,mob_filters)
 		tally = get_player_stat_tally(stat,plyr,mob_filters)		
 	end
 
-	if tally == 0 then return '--' end
+	if tally == 0 then return nil end
 
 	local shift = 10 ^ digits
 	result = math.floor( (total / tally)*shift + 0.5 ) / shift

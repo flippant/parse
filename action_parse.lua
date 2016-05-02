@@ -32,12 +32,14 @@ function parse_action_packet(act)
 				if act.actor.type == 'mob' and settings.record[target.type] then
 					NPC_name = nickname(act.actor.name:gsub(" ","_"):gsub("'",""))
 					PC_name = construct_PC_name(target)
-					if target.name == player.name and settings.index_shield and get_shield() then
-						PC_name = PC_name:sub(1, 6)..'-'..get_shield():sub(1, 3)..''
+					if target.name == player.name then
+						if settings.index_shield and get_shield() then
+							PC_name = PC_name:sub(1, 6)..'-'..get_shield():sub(1, 3)..''
+						end
+						if settings.index_reprisal and buffs.Reprisal then PC_name = PC_name .. 'R' end
+						if settings.index_palisade and buffs.Palisade then PC_name = PC_name .. 'P' end
+						if settings.index_battuta and buffs.Battuta then PC_name = PC_name .. 'B' end
 					end
-					if settings.index_reprisal and buffs.Reprisal then PC_name = PC_name .. 'R' end
-					if settings.index_palisade and buffs.Palisade then PC_name = PC_name .. 'P' end
-					if settings.index_battuta and buffs.Battuta then PC_name = PC_name .. 'B' end
 					if not database[NPC_name] or not database[NPC_name][PC_name] then						
 						init_mob_player_table(NPC_name,PC_name)
 					end
