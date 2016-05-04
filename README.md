@@ -14,7 +14,7 @@ Reports stat to party. If [stat] not provided, will report damage. If [chatmode]
 * damage (% reported is player's portion of total damage)
 * melee | ranged (% reported is hit rate)
 * crit | r_crit
-* multi (reports percent and cardinality of double attacks, triple attacks, etc., but does not distinguish between OAX and currently counts dualwield attacks as one round)
+* multi (reports percent and cardinality of double attacks, triple attacks, etc., but does not distinguish between OAX)
 * block | parry | evade (% reported is based on action hierarchy; for example, block % excludes evades and parry % excludes both evades and non-engaged hits taken)
 * ws | ja | spell (reports averages for total category, and each individual spell)
 
