@@ -40,8 +40,8 @@ Lists mobs and players that are indexed in database.
 `//parse rename [player/monster name] [new name]`
 Renames a player or monster to a new name for all future, incoming data.
 
-`//parse save [file name]`
-Saves raw data as a tab-delimited file to the data/parse folder. Note that as raw data, it does not output percentages or averages, only total damage (or damage taken), and cardinality.
-
 `//parse export|import [file name]`
 Exports/imports XML data to/from the data/export folder. Imported data is merged with any current in-game data.
+
+`//parse save [file name]`
+Saves raw data as a tab-delimited file to the data/parse folder. Note that as raw data, it does not output percentages or averages, only total damage (or damage taken), and cardinality. It is recommended to use the export function instead.
