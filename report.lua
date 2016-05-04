@@ -65,10 +65,12 @@ function report_data(stat,chatmode,chattarget)
 			report_string = report_string .. ('{Total} ')
 			report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ')			
 			for i=1,8,1 do
-				report_string = report_string .. ('['..i..'-hit] ')
-				if get_player_stat_percent(i,player) then report_string = report_string .. (''..get_player_stat_percent(tostring(i),player)..'% ') end		
-				report_string = report_string .. ('('..get_player_stat_tally(tostring(i),player)..'s)')
-				report_string = report_string .. (', ')
+				if get_player_stat_tally(tostring(i),player) > 0 then
+					report_string = report_string .. ('['..i..'-hit] ')
+					if get_player_stat_percent(i,player) then report_string = report_string .. (''..get_player_stat_percent(tostring(i),player)..'% ') end		
+					report_string = report_string .. ('('..get_player_stat_tally(tostring(i),player)..'s)')
+					report_string = report_string .. (', ')
+				end
 			end
 			report_string = report_string .. (' | ')
 		end
