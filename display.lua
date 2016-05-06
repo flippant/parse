@@ -59,7 +59,7 @@ function update_text(stat_type)
 						elseif report_type=="percent" then
 							d[report_type] = get_player_stat_percent(stat,player_name) or "--"
 						elseif report_type=="tally" then
-							d[report_type] = get_player_stat_tally(player_name) or "--"
+							d[report_type] = get_player_stat_tally(stat,player_name) or "--"
 						elseif report_type=="damage" then
 							d[report_type] = get_player_stat_damage(player_name) or "--"
 						else

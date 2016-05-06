@@ -2,7 +2,7 @@
 
 --[[ TO DO
 
-	-- Weird SC bug (also occurs in SB) 289
+	-- Weird SC bug (also occurs in SB) 288,289
 	-- Need to still count strikes that are blinked/parried by mob for multihit_count
 	-- Need to count kicks
 
@@ -122,7 +122,6 @@ function parse_action_packet(act)
 					elseif m.message == 2 or m.message == 227 or m.message == 252 or m.message == 265 or m.message == 379 then --spell
 						register_data(mob_player_table,'spell',m.param,'spell',act.param)
 						aoe_type = 'spell'
-						debug(act.param)
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
 						register_data(mob_player_table,'ja',m.param,'ja',act.param)
 						aoe_type = 'ja'
@@ -135,7 +134,6 @@ function parse_action_packet(act)
 						register_data(mob_player_table,'ja',m.param,'ja','Sange')
 					elseif m.message == 264 then --AoE hit
 						register_data(mob_player_table,aoe_type,m.param,aoe_type,act.param)
-						debug(act.param)
 					end
 
 					if m.has_add_effect then
