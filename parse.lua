@@ -1,4 +1,4 @@
-_addon.version = '1.21'
+_addon.version = '1.22'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -15,6 +15,7 @@ messageColor = 213
 
 default_settings = {}
 default_settings.update_interval = 3
+default_settings.autoexport_interval = 500
 default_settings.debug = false
 default_settings.index_shield = false
 default_settings.index_reprisal = true
@@ -106,7 +107,11 @@ default_settings.display.magic = {
 settings = config.load(default_settings)
 
 update_tracker,update_interval = 0,settings.update_interval
-	
+autoexport = nil
+autoexport_tracker,autoexport_interval = 0,settings.autoexport_interval
+pause = false
+buffs = {["Palisade"] = false, ["Reprisal"] = false, ["Battuta"] = false}
+
 database = {}
 filters = {
 		['mob'] = S{},
@@ -114,8 +119,6 @@ filters = {
 	}
 renames = {}
 text_box = {}
-pause = false
-buffs = {["Palisade"] = false, ["Reprisal"] = false, ["Battuta"] = false}
 
 stat_types = {}
 stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry"}
@@ -134,7 +137,6 @@ require 'file_handle'
 
 ActionPacket.open_listener(parse_action_packet)
 init_boxes()
-
 
 windower.register_event('addon command', function(...)
     local args = {...}
@@ -155,31 +157,42 @@ windower.register_event('addon command', function(...)
 		if pause then pause=false else pause=true end
 		update_texts()
 	elseif args[1] == 'rename' and args[2] and args[3] then
-		renames[args[2]:gsub("^%l", string.upper)] = args[3]
-		message('Data for player/mob '..args[2]:gsub("^%l", string.upper)..' will now be indexed as '..args[3])	
+		if args[3]:gsub('[%w_]','')=="" then
+			renames[args[2]:gsub("^%l", string.upper)] = args[3]
+			message('Data for player/mob '..args[2]:gsub("^%l", string.upper)..' will now be indexed as '..args[3])	
+			return
+		end
+		message('Invalid character found. You may only use alphanumeric characters or underscores.')
 	elseif args[1] == 'interval' then
 		if type(tonumber(args[2]))=='number' then update_tracker,update_interval = 0, tonumber(args[2]) end
 		message('Your current update interval is every '..update_interval..' actions.')
 	elseif args[1] == 'save' then
 		save_parse(args[2])
-	elseif args[1] == 'export' and args[2] then
+	elseif args[1] == 'export' then
 		export_parse(args[2])
+	elseif args[1] == 'autoexport' then
+		if autoexport then
+			autoexport = nil message('Autoexport turned off.')
+		else
+			autoexport = args[2] or 'autoexport'
+			message('Autoexport now on. Saving under file name "'..autoexport..'" every '..autoexport_interval..' recorded actions.')
+		end
 	elseif args[1] == 'import' and args[2] then
 		import_parse(args[2])
 		update_texts()
-	elseif args[1] == 'test' and args[2] then
-		print()
+	elseif args[1] == 'help' then
+		message('report [stat] [chatmode] : Reports stat to designated chatmode. Defaults to damage.')
+		message('filter/f [add/+ | remove/- | clear/reset] [string] : Adds/removes/clears mob filter.')
+		message('show/s [melee/ranged/magic/defense] : Shows/hides display box. "melee" is the default.')
+		message('pause/p : Pauses/unpauses parse. When paused, data is not recorded.')
+		message('reset :  Resets parse.')
+		message('rename [player name] [new name] : Renames a player or monster for NEW incoming data.')
+		message('save [file name] : Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
+		message('import/export [file name] : Imports/exports an XML file to/from database. Filters are applied permanently.')
+		message('autoexport [file name] : Automatically exports an XML file every '..autoexport_interval..' recorded actions.')
+		message('list/l [mobs/players] : Lists the mobs and players currently in the database. "mobs" is the default.')
 	else
-		message('Command was not found. Valid commands:')
-		message('report [stat] [chatmode] :: Reports stat to designated chatmode. Defaults to damage.')
-		message('filter/f [add/+ | remove/- | clear/reset] [string] :: Adds/removes/clears mob filter.')
-		message('show/s [melee/ranged/magic/defense] :: Shows/hides display box. "melee" is the default.')
-		message('pause/p :: Pauses/unpauses parse. When paused, data is not recorded.')
-		message('reset ::  Resets parse.')
-		message('rename [player name] [new name] :: Renames a player or monster for NEW incoming data.')
-		message('save [file name] :: Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
-		message('import/export [file name] :: Imports/exports an xml file to/from database. Filters are applied permanently.')
-		message('list/l [mobs/players] :: Lists the mobs and players currently in the database. "mobs" is the default.')
+		message('That command was not found. Use //parse help for a list of commands.')
 	end
 end )
 
@@ -310,3 +323,29 @@ function check_filters(filter_type,mob_name)
 	end
 	return false
 end
+
+--Copyright (c) 2013~2016, F.R
+--All rights reserved.
+
+--Redistribution and use in source and binary forms, with or without
+--modification, are permitted provided that the following conditions are met:
+
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--    * Neither the name of <addon name> nor the
+--      names of its contributors may be used to endorse or promote products
+--      derived from this software without specific prior written permission.
+
+--THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+--ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+--WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--DISCLAIMED. IN NO EVENT SHALL <your name> BE LIABLE FOR ANY
+--DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+--(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+--LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+--ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+--(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
