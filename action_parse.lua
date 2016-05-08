@@ -1,9 +1,7 @@
--- Credit to Byrth for many of the functions here
-
 --[[ TO DO
 
 	-- Weird SC bug (also occurs in SB) 288,289
-	-- Need to still count strikes that are blinked/parried by mob for multihit_count
+	-- Need to count strikes that are blinked/parried by mob towards multihit_count
 	-- Need to count kicks
 
 ]]
@@ -177,6 +175,9 @@ function parse_action_packet(act)
 	autoexport_tracker = (autoexport_tracker % autoexport_interval) + 1
 end
 
+---------------------------------------------------------
+-- Function credit to Suji
+---------------------------------------------------------
 function construct_PC_name(PC)
 	local name = PC.name
     local result = ''
@@ -291,6 +292,10 @@ function get_shield()
 	return res.items[shield.id].english
 end
 
+
+---------------------------------------------------------
+-- Function credit to Byrth
+---------------------------------------------------------
 function player_info(id)
     local player_table = windower.ffxi.get_mob_by_id(id)
     local typ,owner

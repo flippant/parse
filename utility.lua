@@ -8,20 +8,6 @@ function debug(message)
 	end
 end
 
-function print_table(t)
-	if type(t)=='number' then return t end
-	msg = '{'
-	for key,value in pairs(t) do
-		if type(value)=='table' then
-			msg = msg.. ""..key..'='..print_table(value)..""
-		elseif type(value)=='number' then
-			msg = msg.. ""..key..'='..value..","
-		end
-	end	
-	msg = msg ..'}'
-	return(msg)
-end
-
 function merge_tables(t1,t2)
 	for key,value in pairs(t2) do
 		if not t1[key] then -- doesn't exist already

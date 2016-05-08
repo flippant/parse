@@ -166,8 +166,8 @@ windower.register_event('addon command', function(...)
 	elseif args[1] == 'interval' then
 		if type(tonumber(args[2]))=='number' then update_tracker,update_interval = 0, tonumber(args[2]) end
 		message('Your current update interval is every '..update_interval..' actions.')
-	elseif args[1] == 'save' then
-		save_parse(args[2])
+	-- elseif args[1] == 'save' then
+		-- save_parse(args[2])
 	elseif args[1] == 'export' then
 		export_parse(args[2])
 	elseif args[1] == 'autoexport' then
@@ -187,7 +187,7 @@ windower.register_event('addon command', function(...)
 		message('pause/p : Pauses/unpauses parse. When paused, data is not recorded.')
 		message('reset :  Resets parse.')
 		message('rename [player name] [new name] : Renames a player or monster for NEW incoming data.')
-		message('save [file name] : Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
+		-- message('save [file name] : Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
 		message('import/export [file name] : Imports/exports an XML file to/from database. Filters are applied permanently.')
 		message('autoexport [file name] : Automatically exports an XML file every '..autoexport_interval..' recorded actions.')
 		message('list/l [mobs/players] : Lists the mobs and players currently in the database. "mobs" is the default.')
