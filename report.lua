@@ -8,7 +8,7 @@
 function report_data(stat,chatmode,chattarget)
 	local valid_chatmodes = S{'s','p','t','l','l2'}
 	
-	-- If user doesn't enter a damage, then correct arguments
+	-- If user doesn't enter a stat, then correct arguments
 	if not stat then
 		stat = 'damage'
 	elseif valid_chatmodes[stat] then
@@ -37,7 +37,6 @@ function report_data(stat,chatmode,chattarget)
 	sorted_players = L{}
 	sorted_players = get_sorted_players(stat,20)
 
-	-- if stat is damage
 	if stat == 'damage' then
 		report_string = report_string .. '[Total damage] '..update_filters()..' | '
 		for player in sorted_players:it() do
@@ -86,26 +85,22 @@ function report_data(stat,chatmode,chattarget)
 		end
 	else
 		message('That stat was not found. Reportable stats include:')
-		message('damage, melee, crit, miss, ranged, r_crit, r_miss, spike, sc, add, hit, block, evade, parry, intimidate, absorb, ws, ws_miss, ja, ja_miss, spell')
+		message('damage, melee, multi, crit, miss, ranged, r_crit, r_miss, spike, sc, add, hit, block, evade, parry, intimidate, absorb, ws, ws_miss, ja, ja_miss, spell')
 		return
 	end
 	
-	--remove last two characters of report_string (extra comma+space)
+	--remove last two characters of report_string (extra symbol + space)
 	report_string = report_string:slice(1,#report_string-2)
 	
-	-- Split lines into table of 100-char strings
 	line_cap = 90
-	--report_table = report_string:chunks(line_cap)
 	report_table = report_string:split('| ')
 	report_table['n'] = nil
 	
-	-- report
 	for i,line in pairs(report_table) do
 		if #line <= line_cap then
 			if chat_prefix then windower.send_command('input /'..chat_prefix..' '..line) coroutine.sleep(1.5)
 			else message(line) end		
 		else
-			-- line_table = line:chunks(line_cap)
 			line_table = prepare_string(line,line_cap)
 			line_table['n'] = nil
 			for i,subline in pairs(line_table) do
@@ -119,7 +114,6 @@ end
 
 -- Takes string and returns table of strings
 function prepare_string(str,cap) 
-	-- split into tables by " "
 	str_table = str:split(' ')
 	str_table['n'] = nil
 	new_string = ""

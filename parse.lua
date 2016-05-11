@@ -1,4 +1,4 @@
-_addon.version = '1.22'
+_addon.version = '1.23'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -105,6 +105,7 @@ default_settings.display.magic = {
 	}
 	
 settings = config.load(default_settings)
+config.save(settings)
 
 update_tracker,update_interval = 0,settings.update_interval
 autoexport = nil
@@ -121,7 +122,7 @@ renames = {}
 text_box = {}
 
 stat_types = {}
-stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry"}
+stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry","nonblock"}
 stat_types.melee = S{"melee","miss","crit"}
 stat_types.ranged = S{"ranged","r_miss","r_crit"}
 stat_types.category = S{"ws","ja","spell","ws_miss","ja_miss"}

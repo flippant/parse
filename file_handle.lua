@@ -20,6 +20,15 @@ function import_parse(file_name)
 	
 	imported_database = construct_database(parsed)	
 	merge_tables(database,imported_database)
+	
+	-- Add nonblocks in for old version
+	for mobs,players in pairs(database) do
+		for player,player_table in pairs(players) do
+			if player_table['defense'] and player_table['defense']['block'] and not player_table['defense']['nonblock'] then
+				player_table['defense']['nonblock'] = player_table['defense']['hit']
+			end
+		end
+	end
 
 	message('Parse ['..file_name..'] was imported to database!')
 end

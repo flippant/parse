@@ -42,7 +42,6 @@ function parse_action_packet(act)
 						init_mob_player_table(NPC_name,PC_name)
 					end
 					mob_player_table = database[NPC_name][PC_name]
-
 					if m.reaction == 12 and act.category == 1 then  --block
 						register_data(mob_player_table,'block',m.param)
 						if target.status == 1 then
@@ -55,10 +54,16 @@ function parse_action_packet(act)
 						if target.status == 1 then
 							register_data(mob_player_table,'nonparry')
 						end
+						if act.category == 1 then
+							register_data(mob_player_table,'nonblock')
+						end
 					elseif m.message == 67 then --crit
 						register_data(mob_player_table,'hit',m.param)
 						if target.status == 1 then
 							register_data(mob_player_table,'nonparry')
+						end
+						if act.category == 1 then
+							register_data(mob_player_table,'nonblock')
 						end
 					elseif m.message == 106 then  --intimidate
 						register_data(mob_player_table,'intimidate')
