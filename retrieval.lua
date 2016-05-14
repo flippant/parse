@@ -97,7 +97,7 @@ function get_sorted_players(sort_value,limit)
 					top_result = get_player_stat_avg(sort_value,player)
 					player_name = player
 				end				
-			elseif S{'hit','miss','nonblock','nonparry','r_miss','spike'}:contains(sort_value) then -- sort by tally
+			elseif S{'hit','miss','nonblock','nonparry','r_miss'}:contains(sort_value) then -- sort by tally
 				if get_player_stat_tally(sort_value,player) > top_result and not sorted_player_table:contains(player) then
 					top_result = get_player_stat_tally(sort_value,player)
 					player_name = player
@@ -105,6 +105,11 @@ function get_sorted_players(sort_value,limit)
 			elseif (S{'melee','ranged','crit','r_crit'}:contains(sort_value) or get_stat_type(sort_value)=="defense") and get_player_stat_percent(sort_value,player) then -- sort by percent
 				if get_player_stat_percent(sort_value,player) > top_result and not sorted_player_table:contains(player) then
 					top_result = get_player_stat_percent(sort_value,player)
+					player_name = player
+				end	
+			elseif S{'sc','add','spike'}:contains(sort_value) then --sort by damage
+				if get_player_stat_damage(sort_value,player) > top_result and not sorted_player_table:contains(player) then
+					top_result = get_player_stat_damage(sort_value,player)
 					player_name = player
 				end	
 			end

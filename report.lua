@@ -7,11 +7,10 @@
 
 function report_data(stat,chatmode,chattarget)
 	local valid_chatmodes = S{'s','p','t','l','l2'}
-	
 	-- If user doesn't enter a stat, then correct arguments
 	if not stat then
 		stat = 'damage'
-	elseif valid_chatmodes[stat] then
+	elseif valid_chatmodes:contains(stat) then
 		chattarget = chatmode
 		chatmode = stat
 		stat = 'damage'
@@ -24,7 +23,7 @@ function report_data(stat,chatmode,chattarget)
 	else
 		chat_prefix = chatmode
 	end
-	
+
 	if S{'acc','accuracy','hitrate'}:contains(stat) then
 		stat = 'melee'
 	elseif S{'racc'}:contains(stat) then
