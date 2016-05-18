@@ -172,7 +172,7 @@ windower.register_event('addon command', function(...)
 	elseif args[1] == 'export' then
 		export_parse(args[2])
 	elseif args[1] == 'autoexport' then
-		if autoexport then
+		if (autoexport and not args[2]) or args[2] == 'off' then
 			autoexport = nil message('Autoexport turned off.')
 		else
 			autoexport = args[2] or 'autoexport'
