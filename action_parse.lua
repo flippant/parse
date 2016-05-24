@@ -312,9 +312,10 @@ function player_info(id)
     for i,v in pairs(windower.ffxi.get_party()) do
         if type(v) == 'table' and v.mob and v.mob.id == player_table.id then           
             if i == 'p0' then
-                typ = 'party'
+                typ = 'me'
             elseif i:sub(1,1) == 'p' then
                 typ = 'party'
+				if player_table.is_npc then typ = 'trust' end
             else
 				typ = 'alliance'
             end
