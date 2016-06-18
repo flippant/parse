@@ -1,4 +1,4 @@
-_addon.version = '1.23'
+_addon.version = '1.3'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -131,6 +131,8 @@ stat_types.category = S{"ws","ja","spell","ws_miss","ja_miss"}
 stat_types.other = S{"spike","sc","add"}
 stat_types.multi = S{'1','2','3','4','5','6','7','8'}
 
+damage_types = S{"melee","crit","ranged","r_crit","ws","ja","spell","spike","add"}
+
 require 'utility'
 require 'retrieval'
 require 'display'
@@ -189,6 +191,7 @@ windower.register_event('addon command', function(...)
 		message('show/s [melee/ranged/magic/defense] : Shows/hides display box. "melee" is the default.')
 		message('pause/p : Pauses/unpauses parse. When paused, data is not recorded.')
 		message('reset :  Resets parse.')
+		message('interval [number] :  Defines how many actions it takes before displays are updated.')
 		message('rename [player name] [new name] : Renames a player or monster for NEW incoming data.')
 		-- message('save [file name] : Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
 		message('import/export [file name] : Imports/exports an XML file to/from database. Filters are applied permanently.')
