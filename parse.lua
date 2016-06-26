@@ -131,7 +131,7 @@ stat_types.category = S{"ws","ja","spell","ws_miss","ja_miss"}
 stat_types.other = S{"spike","sc","add"}
 stat_types.multi = S{'1','2','3','4','5','6','7','8'}
 
-damage_types = S{"melee","crit","ranged","r_crit","ws","ja","spell","spike","add"}
+damage_types = S{"melee","crit","ranged","r_crit","ws","ja","spell","spike","sc","add"}
 
 require 'utility'
 require 'retrieval'
