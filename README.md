@@ -33,6 +33,7 @@ Changes the interval rate at which the display boxes are updated. The default is
 
 `//parse filter (add|remove) [substring]`
 Adds/removes substring to monster filter list. Substring is not case sensitive; replace all spaces with underscores and exclude commas. If substring begins with '!' it will exclude any monsters with that substring. If substring begins with '^' it will only include exact matches. For example:
+* `schah` will include Schah and all of his minions.
 * `!schah` will exclude Schah and all of his minions (Schah's Bhata, etc.).
 * `^schah` will only include Schah, and not his minions. 
 * `!^schah` will exclude only Schah.
