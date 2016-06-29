@@ -32,7 +32,7 @@ Toggles visibility of each display box. Note that while data is still parsed reg
 Changes the interval rate at which the display boxes are updated. The default is '3', meaning the displays will update every three recorded action packets.
 
 `//parse filter (add|remove) [substring]`
-Adds/removes substring to filter list.
+Adds/removes substring to filter list. Substring is not case sensitive. If substring begins with '!' it will exclude that substring from all filtered monsters. If substring begins with '^' it will only include exact matches. For example `^warder_of_courage` or `!bhata`.
 
 `//parse filter clear`
 Clears filter list.
