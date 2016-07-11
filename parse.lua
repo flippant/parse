@@ -324,18 +324,26 @@ function check_filters(filter_type,mob_name)
 	end
 	
 	local response = false
+	local only_excludes = true
 	for v,__ in pairs(filters[filter_type]) do
 		if v:lower():startswith('!') then --exclusion filter
-			if string.find(mob_name:lower(),v:lower():gsub('%!','')) then --immediately return false
+			if string.find(mob_name:lower(),v:lower():gsub('%!','')) or v:lower():gsub('%!',''):gsub('%^','')==mob_name:lower() then --immediately return false
 				return false
 			end
 		elseif v:lower():startswith('^') then --exact match filter
 			if v:lower():gsub('%^','')==mob_name:lower() then
-				response = true
+				response = true				
 			end
+			only_excludes = false
 		elseif string.find(mob_name:lower(),v:lower()) then --wildcard filter (default behavior)
 			response = true
+			only_excludes = false
+		else
+			only_excludes = false
 		end
+	end
+	if not response and only_excludes then
+		response = true
 	end
 	return response
 end
