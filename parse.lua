@@ -14,7 +14,7 @@ res = require 'resources'
 messageColor = 213
 
 default_settings = {}
-default_settings.update_interval = 3
+default_settings.update_interval = 1
 default_settings.autoexport_interval = 500
 default_settings.debug = false
 default_settings.index_shield = false
