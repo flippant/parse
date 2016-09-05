@@ -5,7 +5,45 @@
 	-- Need to count kicks
 
 ]]
-
+spike_effect_valid = {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false}
+add_effect_valid = {true,true,true,true,false,false,false,false,false,false,true,false,true,false,false}
+sc_messages = {
+    [288] = "Skillchain: Light",
+    [289] = "Skillchain: Darkness",
+    [290] = "Skillchain: Gravitation",
+    [291] = "Skillchain: Fragmentation",
+    [292] = "Skillchain: Distortion",
+    [293] = "Skillchain: Fusion",
+    [294] = "Skillchain: Compression",
+    [295] = "Skillchain: Liquefaction",
+    [296] = "Skillchain: Induration",
+    [297] = "Skillchain: Reverberation",
+    [298] = "Skillchain: Transfixion",
+    [299] = "Skillchain: Scission",
+    [300] = "Skillchain: Detonation",
+    [301] = "Skillchain: Impaction",
+    [302] = "Skillchain: Cosmic Elucidation",
+    [385] = "Skillchain: Light",
+    [386] = "Skillchain: Darkness",
+    [387] = "Skillchain: Gravitation",
+    [388] = "Skillchain: Fragmentation",
+    [389] = "Skillchain: Distortion",
+    [390] = "Skillchain: Fusion",
+    [391] = "Skillchain: Compression",
+    [392] = "Skillchain: Liquefaction",
+    [393] = "Skillchain: Induration",
+    [394] = "Skillchain: Reverberation",
+    [395] = "Skillchain: Transfixion",
+    [396] = "Skillchain: Scission",
+    [397] = "Skillchain: Detonation",
+    [398] = "Skillchain: Impaction",
+    [732] = "Skillchain: Universal Enlightenment",
+    [767] = "Skillchain: Radiance",
+    [768] = "Skillchain: Umbra",
+    [769] = "Skillchain: Radiance",
+    [770] = "Skillchain: Umbra",
+}
+                        
 function parse_action_packet(act)
 	if pause then return end
 	
@@ -138,23 +176,23 @@ function parse_action_packet(act)
 					elseif m.message == 264 then --AoE hit
 						register_data(mob_player_table,aoe_type,m.param,aoe_type,act.param)
 					end
-
-					if m.has_add_effect then
-						--196,223,
-						if T{288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,385,386,387,388,389,390,391,392,393,394,395,396,397,398,732,767,768}:contains(m.add_effect_message) then
+                    
+                    
+					if m.has_add_effect and m.add_effect_message ~= 0 and add_effect_valid[act.category] then
+						if T{288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,385,386,387,388,389,390,391,392,393,394,395,396,397,398,732,767,768,769,770}:contains(m.add_effect_message) then
 							if not database[NPC_name]["SC-"..PC_name:sub(1, 3)..""] then
 								init_mob_player_table(NPC_name,"SC-"..PC_name:sub(1, 3).."")
 							end	
 							mob_player_table = database[NPC_name]["SC-"..PC_name:sub(1, 3)..""]							
 							register_data(mob_player_table,'sc',m.add_effect_param)
-							debug('sc ('..PC_name..') '..m.add_effect_message..' '..m.add_effect_param)
+							if sc_messages and sc_messages[m.add_effect_message] then debug('sc ('..PC_name..') '..sc_messages[m.add_effect_message]..' '..m.add_effect_param) end
 						elseif T{161,163,229}:contains(m.add_effect_message) and m.add_effect_param > 0 then
 							register_data(mob_player_table,'add',m.add_effect_param)
 						end
 					end
 					
-					if m.has_spike_effect then --defensive data (when mob counters, has blazespikes, etc.) // Can you block a counter, and can I tell that you blocked a counter?
-						debug('Monster spikes: Effect: '..m.spike_effect_effect)
+					if m.has_spike_effect and m.spike_effect_message ~= 0 and spike_effect_valid[act.category] then --defensive data (when mob counters, has blazespikes, etc.) // Can you block a counter, and can I tell that you blocked a counter?
+						--debug('Monster spikes: Effect: '..m.spike_effect_effect)
 					end
 				end				
 			end
@@ -195,9 +233,9 @@ function construct_PC_name(PC)
         end
         result = result..'-'..string.sub(nickname(PC.owner.name), 1, 3)..''
     else
-        return nickname(name)
+        result = nickname(name)
     end
-    return result
+    return string.sub(result,1,10)
 end
 
 function nickname(player_name)
