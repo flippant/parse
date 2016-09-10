@@ -1,4 +1,4 @@
-_addon.version = '1.4'
+_addon.version = '1.41'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -317,17 +317,21 @@ function print_list(list_type)
 	end
 end
 
--- Returns true if no filters, or if monster, or part of monster name, is found in filter list
+-- Returns true if monster is not filtered, false if monster is filtered out
 function check_filters(filter_type,mob_name)
 	if not filters[filter_type] or filters[filter_type]:tostring()=="{}" then
 		return true
 	end
-	
+
 	local response = false
 	local only_excludes = true
 	for v,__ in pairs(filters[filter_type]) do
-		if v:lower():startswith('!') then --exclusion filter
-			if string.find(mob_name:lower(),v:lower():gsub('%!','')) or v:lower():gsub('%!',''):gsub('%^','')==mob_name:lower() then --immediately return false
+		if v:lower():startswith('!^') then --exact exclusion filter
+			if v:lower():gsub('%!',''):gsub('%^','')==mob_name:lower() then --immediately return false
+				return false
+			end
+        elseif v:lower():startswith('!') then --exclusion filter
+			if string.find(mob_name:lower(),v:lower():gsub('%!','')) then --immediately return false
 				return false
 			end
 		elseif v:lower():startswith('^') then --exact match filter
