@@ -19,7 +19,7 @@ If [stat] not provided, will report damage. Valid stats include, but aren't limi
 * ws | ja | spell (reports averages for total category, and each individual spell; also reports hit rate % for total ws/ja)
 * ws_miss | ja_miss (reports counts for individual spell)
 
-If [ability name] is provided when reporting WS, JA, or spell, it will only report that particular ability. This is case sensitive. Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
+If [ability name] is provided when reporting WS, JA, or spell, it will only report that particular ability. It must be an exact match to the database, and is thus case sensitive. Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
 * `//parse report ws Rudras_Storm`
 * `//parse report spell Death l2`
 
