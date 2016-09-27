@@ -20,8 +20,8 @@ If [stat] not provided, will report damage. Valid stats include, but aren't limi
 * ws_miss | ja_miss (reports counts for individual spell)
 
 If [ability name] is provided when reporting WS, JA, or spell, it will only report that particular ability. This is case sensitive. Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
-* `//report ws Rudras_Storm`
-* `//report spell Death l2`
+* `//parse report ws Rudras_Storm`
+* `//parse report spell Death l2`
 
 If [chatmode] not provided, will print to personal chatlog. Valid chatmodes include:
 * p: party
