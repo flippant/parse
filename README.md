@@ -9,7 +9,7 @@ Pauses the parser.
 `//parse reset`
 Resets the currently stored data.
 
-`//parse report [stat] [chatmode]` Reports stat to party. 
+`//parse report [stat] [ability name] [chatmode]` Reports stat to party. 
 If [stat] not provided, will report damage. Valid stats include, but aren't limited to:
 * damage (% reported is player's portion of total damage)
 * melee | ranged (% reported is hit rate)
@@ -17,6 +17,10 @@ If [stat] not provided, will report damage. Valid stats include, but aren't limi
 * multi (reports percent and cardinality of double attacks, triple attacks, etc., but does not distinguish between OAX)
 * block | parry | evade (% reported is based on action hierarchy; for example, block % excludes evades and parry % excludes both evades and non-engaged hits taken)
 * ws | ja | spell (reports averages for total category, and each individual spell)
+
+If [ability name] is provided when reporting WS, JA, or spell, it will only report that particular ability. This is case sensitive. Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
+* `//report ws Rudras_Storm`
+* `//report spell Death l2`
 
 If [chatmode] not provided, will print to personal chatlog. Valid chatmodes include:
 * p: party
