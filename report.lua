@@ -50,7 +50,9 @@ function report_data(stat,ability,chatmode,chattarget)
 			report_string = report_string .. (player..': '..get_player_stat_percent(stat,player)..'% ('..get_player_damage(player)..'), ')
 		end
 	elseif get_stat_type(stat)=='category' then		
-        report_string = report_string .. '[Reporting '..stat..' stats] '..update_filters()..' | '
+        report_string = report_string .. '[Reporting '..stat..' '
+        if ability then report_string = report_string .. '('..ability..') ' end
+        report_string = report_string .. 'stats] '..update_filters()..' | '
         player_spell_table = get_player_spell_table(stat)
         for player in sorted_players:it() do
             if not ability or (ability and player_spell_table[player][ability]) then
