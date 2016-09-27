@@ -97,7 +97,7 @@ function get_sorted_players(sort_value,limit)
 					top_result = get_player_stat_avg(sort_value,player)
 					player_name = player
 				end				
-			elseif S{'hit','miss','nonblock','nonparry','r_miss'}:contains(sort_value) then -- sort by tally
+			elseif S{'hit','miss','nonblock','nonparry','r_miss','ws_miss','ja_miss'}:contains(sort_value) then -- sort by tally
 				if get_player_stat_tally(sort_value,player) > top_result and not sorted_player_table:contains(player) then
 					top_result = get_player_stat_tally(sort_value,player)
 					player_name = player
@@ -250,6 +250,7 @@ function get_player_stat_damage(stat,plyr,mob_filters)
 end
 
 function get_player_stat_avg(stat,plyr,mob_filters)
+    if stat=='ws_miss' or stat=='ja_miss' then return nil end
 	if type(stat)=='number' then stat=tostring(stat) end
 	local total,tally,result,digits = 0,0,0,0
 	
