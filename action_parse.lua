@@ -160,8 +160,11 @@ function parse_action_packet(act)
 					elseif m.message == 188 then --WS miss
 						register_data(mob_player_table,'ws_miss',nil,'ws',act.param)
 						aoe_type = 'ws'
-					elseif m.message == 2 or m.message == 227 or m.message == 252 or m.message == 265 or m.message == 379 then --spell
+					elseif m.message == 2 or m.message == 227 then --spell
 						register_data(mob_player_table,'spell',m.param,'spell',act.param)
+						aoe_type = 'spell'
+                    elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 then --MB
+                        register_data(mob_player_table,'spell',m.param,'spell',act.param)
 						aoe_type = 'spell'
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
 						register_data(mob_player_table,'ja',m.param,'ja',act.param)
