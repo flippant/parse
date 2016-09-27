@@ -57,12 +57,14 @@ function report_data(stat,ability,chatmode,chattarget)
         for player in sorted_players:it() do
             if not ability or (ability and player_spell_table[player][ability]) then
                 report_string = report_string .. (player..': ')
-                report_string = report_string .. ('{Total} ')
-                if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	
-                report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s) ')
+                if not ability then
+                    report_string = report_string .. ('{Total} ')
+                    if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	
+                    report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s) ')
+                end
                 for spell,spell_table in pairs(player_spell_table[player]) do
+                    if not ability then report_string = report_string .. ('['..spell..'] ') end
                     if not ability or (ability and spell==ability) then
-                        report_string = report_string .. ('['..spell..'] ')
                         -- if (stat=='ws' or stat=='ja') and get_player_stat_tally(stat,player) / get_player_stat_tally(stat..'_miss',player) < 1 then
                             -- report_string = report_string .. (get_player_stat_tally(stat,player) / get_player_stat_tally(stat..'_miss',player) * 100..'%')
                         -- end
