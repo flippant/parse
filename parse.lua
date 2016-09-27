@@ -11,7 +11,7 @@ config = require('config')
 texts = require('texts')
 res = require 'resources'
 
-messageColor = 213
+messageColor = 200
 
 default_settings = {}
 default_settings.update_interval = 1
