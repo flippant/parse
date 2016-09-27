@@ -6,21 +6,28 @@
 
 ]]
 
-function report_data(stat,chatmode,chattarget)
+function report_data(stat,ability,chatmode,chattarget)
 	local valid_chatmodes = S{'s','p','t','l','l2'}
 	-- If user doesn't enter a stat, then correct arguments
 	if not stat then
 		stat = 'damage'
 	elseif valid_chatmodes:contains(stat) then
-		chattarget = chatmode
+		chattarget = ability
 		chatmode = stat
+        ability = nil
 		stat = 'damage'
+    elseif valid_chatmodes:contains(ability) then
+        chattarget = chatmode
+        chatmode = ability
+        ability = nil
 	end
 	if not valid_chatmodes[chatmode] then
 		chatmode = nil
 	end
-	if chatmode == 't' and chattarget then
-		chat_prefix = chatmode..' '..chattarget
+	if chatmode == 't' then
+        if chattarget then
+            chat_prefix = chatmode..' '..chattarget
+        else message("Chat target not found.") end
 	else
 		chat_prefix = chatmode
 	end
@@ -43,20 +50,27 @@ function report_data(stat,chatmode,chattarget)
 			report_string = report_string .. (player..': '..get_player_stat_percent(stat,player)..'% ('..get_player_damage(player)..'), ')
 		end
 	elseif get_stat_type(stat)=='category' then		
-		report_string = report_string .. '[Reporting '..stat..' stats] '..update_filters()..' | '
-		player_spell_table = get_player_spell_table(stat)
-		for player in sorted_players:it() do
-			report_string = report_string .. (player..': ')
-			report_string = report_string .. ('{Total} ')
-			if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	
-			report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s) ')
-			for spell,spell_table in pairs(player_spell_table[player]) do	
-				report_string = report_string .. ('['..spell..'] ')
-				report_string = report_string .. ('~'..math.floor(spell_table.damage / spell_table.tally)..'avg ')			
-				report_string = report_string .. ('('..spell_table.tally..'s) ')				
-			end
-			report_string = report_string .. (' | ')			
-		end
+        report_string = report_string .. '[Reporting '..stat..' stats] '..update_filters()..' | '
+        player_spell_table = get_player_spell_table(stat)
+        for player in sorted_players:it() do
+            if not ability or (ability and player_spell_table[player][ability]) then
+                report_string = report_string .. (player..': ')
+                report_string = report_string .. ('{Total} ')
+                if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	
+                report_string = report_string .. ('('..get_player_stat_tally(stat,player)..'s) ')
+                for spell,spell_table in pairs(player_spell_table[player]) do
+                    if not ability or (ability and spell==ability) then
+                        report_string = report_string .. ('['..spell..'] ')
+                        -- if (stat=='ws' or stat=='ja') and get_player_stat_tally(stat,player) / get_player_stat_tally(stat..'_miss',player) < 1 then
+                            -- report_string = report_string .. (get_player_stat_tally(stat,player) / get_player_stat_tally(stat..'_miss',player) * 100..'%')
+                        -- end
+                        report_string = report_string .. ('~'..math.floor(spell_table.damage / spell_table.tally)..'avg ')			
+                        report_string = report_string .. ('('..spell_table.tally..'s) ')
+                    end
+                end
+                report_string = report_string .. (' | ')
+            end  			
+        end
 	elseif get_stat_type(stat)=='multi' or stat=='multi' then
 		report_string = report_string .. '[Reporting multihit stats] '..update_filters()..' | '
 		for player in sorted_players:it() do

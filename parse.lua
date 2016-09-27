@@ -1,4 +1,4 @@
-_addon.version = '1.41'
+_addon.version = '1.42'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -146,7 +146,7 @@ init_boxes()
 windower.register_event('addon command', function(...)
     local args = {...}
     if args[1] == 'report' then
-		report_data(args[2],args[3],args[4])
+		report_data(args[2],args[3],args[4],args[5])
 	elseif (args[1] == 'filter' or args[1] == 'f') and args[2] then
 		edit_filters(args[2],args[3],args[4])
 		update_texts()
