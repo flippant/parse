@@ -57,3 +57,6 @@ Exports/imports data to/from the "parse/data/export" folder. Imported data is me
 
 `//parse autoexport [file name]`
 Automatically exports database every 500 actions. This interval can be changed in settings under autoexport_interval. Use command again with no file name, or 'off' to turn it off.
+
+### Settings
+For now, refer to the Excel Spreadsheet for a brief description of Parse settings.
