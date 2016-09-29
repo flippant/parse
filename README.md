@@ -17,14 +17,14 @@ If [stat] not provided, will report damage. Valid stats include, but aren't limi
 * damage (% reported is player's portion of total damage)
 * melee | ranged (% reported is hit rate)
 * crit | r_crit
-* multi (reports percent and count of double attacks, triple attacks, etc., but does not distinguish between OAX, nor accommodates for killing blows; i.e. if you kill in one hit, it will only ever record as 1-hit)
+* multi (reports % and count of double attacks, triple attacks, etc., but does not distinguish between OAX, nor accommodates for killing blows; i.e. if you kill in one hit, it will only ever record as 1-hit)
 * block | parry | evade (% reported is based on action hierarchy; for example, block % excludes evades and parry % excludes both evades and non-engaged hits taken)
 * ws | ja | spell | mb | enfeeb (reports averages for total category, and each individual spell; also reports hit rate % for total ws/ja)
 * ws_miss | ja_miss | enfeeb_miss (reports counts for individual spell)
 
-If [ability name] is provided when reporting WS, JA, or spell, it will only report that particular ability. **It must be an exact match to the database, and is thus case sensitive.** Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
+If [ability name] is provided when reporting WS, JA, spell, MB, or enfeeb, it will only report that particular ability. **It must be an exact match to the database, and is thus case sensitive.** Replace all spaces with an underscore and omit all apostrophes and other special characters. For example:
 * `//parse report ws Rudras_Storm`
-* `//parse report spell Death l2`
+* `//parse report mb Death l2`
 
 If [chatmode] not provided, will print to personal chatlog. Valid chatmodes include:
 * p: party
