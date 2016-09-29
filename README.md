@@ -36,11 +36,8 @@ If [chatmode] not provided, will print to personal chatlog. Valid chatmodes incl
 `//parse show (melee|ranged|magic|defense)`
 Toggles visibility of each display box. Note that while data is still parsed regardless of visibility, these displays are not updated unless visible, saving resources.
 
-`//parse interval [number]`
-Changes the interval rate at which the display boxes are updated. The default is '3', meaning the displays will update every three recorded action packets.
-
 `//parse filter (add|remove) [substring]`
-Adds/removes substring to monster filter list. Substring is not case sensitive; replace all spaces with underscores and exclude apostrophes. If substring begins with '!' it will exclude any monsters with that substring. If substring begins with '^' it will only include exact matches. For example:
+Adds/removes substring to monster filter list. Substring is not case sensitive; replace all spaces with underscores and omit special characters. If substring begins with '!' it will exclude any monsters with that substring. If substring begins with '^' it will only include exact matches. For example:
 * `schah` will include Schah and all of his minions.
 * `!schah` will exclude Schah and all of his minions (Schah's Bhata, etc.).
 * `^schah` will only include Schah, and not his minions. 
@@ -53,7 +50,7 @@ Clears filter list.
 Lists mobs and players that are found in database.
 
 `//parse rename [player/monster name] [new name]`
-Renames a player or monster to a new name for all future, incoming data. To rename again, always use the original name. Replace any spaces with _ and exclude all commas.
+Renames a player or monster to a new name for all future, incoming data. To rename again, always use the original name. Replace any spaces with _ and omit all special characters.
 
 `//parse (export|import) [file name]`
 Exports/imports data to/from the "parse/data/export" folder. Imported data is merged with any current in-game data. If file name is taken, it will append os.clock. NOTE: Exported data will be saved according to any current filters.
@@ -61,8 +58,11 @@ Exports/imports data to/from the "parse/data/export" folder. Imported data is me
 `//parse autoexport [file name]`
 Automatically exports database every 500 actions. This interval can be changed in settings under autoexport_interval. Use command again with no file name, or 'off' to turn it off.
 
+`//parse interval [number]`
+Changes the interval rate at which the display boxes are updated. The default is '1', meaning the displays (if visible) will update every recorded action. This function shouldn't be needed and was just a poor fix to an old problem, but if there are enough actions occuring to cause lag from the display calculations, this would alleive it. (Also, you could always hide the display.)
+
 ### Logging
-As opposed to export, which saves the in-game database to an XML file, logging records each individual action's parameters to a file. For example, export will only save the total damage and total count of Flippant's Rudra's Storms against Wild Rabbits; but logging will save *how much* each Rudra's Storm did.
+As opposed to export, which saves the in-game database to an XML file, logging records each individual action's parameters to a file. For example, export will only save the total damage and total count of Flippant's Rudra's Storms against Wild Rabbits; but logging will save how much *each* Rudra's Storm did.
 
 Logging data is automatic, as long as the player being recorded is listed in the logger option of your settings. This is case-sensitive, and wildcard (\*) at the end of a name is permitted (this allows defensive data to be recorded easily, despite changes in name due to special indexing).
 
