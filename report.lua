@@ -59,7 +59,7 @@ function report_data(stat,ability,chatmode,chattarget)
                 report_string = report_string .. (player..': ')
                 if not ability then
                     report_string = report_string .. ('{Total} ')
-                    if (stat=='ws' or stat=='ja') and get_player_stat_percent(stat,player) then 
+                    if (stat=='ws' or stat=='ja' or stat=='enfeeb') and get_player_stat_percent(stat,player) then 
                         report_string = report_string .. (get_player_stat_percent(stat,player) ..'% ')
                     end
                     if get_player_stat_avg(stat,player) then report_string = report_string .. ('~'..get_player_stat_avg(stat,player)..'avg ') end	

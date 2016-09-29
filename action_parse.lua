@@ -163,20 +163,24 @@ function parse_action_packet(act)
 					elseif m.message == 2 or m.message == 227 then --spell
 						register_data(mob_player_table,'spell',m.param,'spell',act.param)
 						aoe_type = 'spell'
-                    elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 then --MB
-                        register_data(mob_player_table,'spell',m.param,'spell',act.param)
+                    elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 or m.message == 747 or m.message == 748 then --MB
+                        register_data(mob_player_table,'mb',m.param,'spell',act.param)
 						aoe_type = 'spell'
+                    elseif m.message == 82 or m.message == 236 or m.message == 754 or m.message == 755 then --enfeeb
+                        register_data(mob_player_table,'enfeeb',nil,'spell',act.param)
+                    elseif m.message == 85 or m.message == 284 or m.message == 653 or m.message == 654 or m.message == 655 or m.message == 656 then --resist enfeeb
+                        register_data(mob_player_table,'enfeeb_miss',nil,'spell',act.param)
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
 						register_data(mob_player_table,'ja',m.param,'ja',act.param)
 						aoe_type = 'ja'
 					elseif m.message == 158 or m.message == 324 then --JA miss
-						register_data(mob_player_table,'ja_miss',m.param,'ja',act.param)
+						register_data(mob_player_table,'ja_miss',nil,'ja',act.param)
 						aoe_type = 'ja'
 					elseif m.message == 157 then --Barrage
 						register_data(mob_player_table,'ja',m.param,'ja','Barrage')
 					elseif m.message == 77 then --Sange
 						register_data(mob_player_table,'ja',m.param,'ja','Sange')
-					elseif m.message == 264 then --AoE hit
+					elseif m.message == 264 then --AoE damage
 						register_data(mob_player_table,aoe_type,m.param,aoe_type,act.param)
 					end
                     

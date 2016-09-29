@@ -1,4 +1,4 @@
-_addon.version = '1.43'
+_addon.version = '1.5'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -127,11 +127,11 @@ stat_types = {}
 stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry","nonblock"}
 stat_types.melee = S{"melee","miss","crit"}
 stat_types.ranged = S{"ranged","r_miss","r_crit"}
-stat_types.category = S{"ws","ja","spell","ws_miss","ja_miss"}
+stat_types.category = S{"ws","ja","spell","mb","enfeeb","ws_miss","ja_miss","enfeeb_miss"}
 stat_types.other = S{"spike","sc","add"}
 stat_types.multi = S{'1','2','3','4','5','6','7','8'}
 
-damage_types = S{"melee","crit","ranged","r_crit","ws","ja","spell","spike","sc","add"}
+damage_types = S{"melee","crit","ranged","r_crit","ws","ja","spell","mb","spike","sc","add"}
 
 require 'utility'
 require 'retrieval'
