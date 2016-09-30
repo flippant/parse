@@ -1,4 +1,4 @@
-# parse
+# parse v1.6
 An FFXI Parser Addon for Windower. This addon parses both offensive and defensive data, stores WS/JAs/spells data by individual spell, tracks additional information like multihit rates, and provides the ability to export/import data in XML format and log individually recorded data.
 
 ### Settings
