@@ -1,4 +1,4 @@
-_addon.version = '1.5'
+_addon.version = '1.6'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -29,6 +29,7 @@ default_settings.record = {
 		["pet"] = true,
 		["fellow"] = true
 	}
+default_settings.logger = S{"Flipp*","Arcane"}
 default_settings.label = {
 		["player"] = {red=100,green=200,blue=200},
 		["stat"] = {red=225,green=150,blue=0},
@@ -122,6 +123,7 @@ filters = {
 	}
 renames = {}
 text_box = {}
+logs = {}
 
 stat_types = {}
 stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry","nonblock"}

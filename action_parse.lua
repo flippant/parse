@@ -76,45 +76,42 @@ function parse_action_packet(act)
 						if settings.index_palisade and buffs.Palisade then PC_name = PC_name .. 'P' end
 						if settings.index_battuta and buffs.Battuta then PC_name = PC_name .. 'B' end
 					end
-					if not database[NPC_name] or not database[NPC_name][PC_name] then						
-						init_mob_player_table(NPC_name,PC_name)
-					end
-					mob_player_table = database[NPC_name][PC_name]
+
 					if m.reaction == 12 and act.category == 1 then  --block
-						register_data(mob_player_table,'block',m.param)
+						register_data(NPC_name,PC_name,'block',m.param)
 						if target.status == 1 then
-							register_data(mob_player_table,'nonparry')
+							register_data(NPC_name,PC_name,'nonparry')
 						end
 					elseif m.reaction == 11 and act.category == 1 then  --parry
-						register_data(mob_player_table,'parry')
+						register_data(NPC_name,PC_name,'parry')
 					elseif m.message == 1 then --hit
-						register_data(mob_player_table,'hit',m.param)
+						register_data(NPC_name,PC_name,'hit',m.param)
 						if target.status == 1 then
-							register_data(mob_player_table,'nonparry')
+							register_data(NPC_name,PC_name,'nonparry')
 						end
 						if act.category == 1 then
-							register_data(mob_player_table,'nonblock',m.param)
+							register_data(NPC_name,PC_name,'nonblock',m.param)
 						end
 					elseif m.message == 67 then --crit
-						register_data(mob_player_table,'hit',m.param)
+						register_data(NPC_name,PC_name,'hit',m.param)
 						if target.status == 1 then
-							register_data(mob_player_table,'nonparry')
+							register_data(NPC_name,PC_name,'nonparry')
 						end
 						if act.category == 1 then
-							register_data(mob_player_table,'nonblock',m.param)
+							register_data(NPC_name,PC_name,'nonblock',m.param)
 						end
 					elseif m.message == 106 then  --intimidate
-						register_data(mob_player_table,'intimidate')
+						register_data(NPC_name,PC_name,'intimidate')
 					elseif m.message == 15 or m.message == 282 then --evade
-						register_data(mob_player_table,'evade')
+						register_data(NPC_name,PC_name,'evade')
 					end
 
 					if m.message == 373 then  --absorb (can happen during block)
-						register_data(mob_player_table,'absorb',m.param)
+						register_data(NPC_name,PC_name,'absorb',m.param)
 					end					
 					
 					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.)
-						register_data(mob_player_table,'spike',m.spike_effect_param)
+						register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
 					end
 					--spike_effect_effect = 2 for counters
 
@@ -122,79 +119,72 @@ function parse_action_packet(act)
 				elseif target.type == 'mob' and settings.record[act.actor.type] then
 					NPC_name = nickname(target.name:gsub(" ","_"):gsub("'",""))
 					PC_name = construct_PC_name(act.actor)
-					if not database[NPC_name] or not database[NPC_name][PC_name] then						
-						init_mob_player_table(NPC_name,PC_name)
-					end
-					mob_player_table = database[NPC_name][PC_name]
 
 					if m.message == 1 then --melee
-						register_data(mob_player_table,'melee',m.param)
+						register_data(NPC_name,PC_name,'melee',m.param)
 						if m.animation==0 then
 							multihit_count = multihit_count + 1
 						elseif m.animation==1 then
 							multihit_count2 = multihit_count2 + 1
 						end
 					elseif m.message == 67 then --crit
-						register_data(mob_player_table,'crit',m.param)
+						register_data(NPC_name,PC_name,'crit',m.param)
 						if m.animation==0 then
 							multihit_count = multihit_count + 1
 						elseif m.animation==1 then
 							multihit_count2 = multihit_count2 + 1
 						end						
 					elseif m.message == 15 or m.message == 63 then --miss
-						register_data(mob_player_table,'miss')
+						register_data(NPC_name,PC_name,'miss')
 						if m.animation==0 then
 							multihit_count = multihit_count + 1
 						elseif m.animation==1 then
 							multihit_count2 = multihit_count2 + 1
 						end
 					elseif T{352, 576, 577}:contains(m.message) then --ranged
-						register_data(mob_player_table,'ranged',m.param)
+						register_data(NPC_name,PC_name,'ranged',m.param)
 					elseif m.message == 353 then --ranged crit
-						register_data(mob_player_table,'r_crit',m.param)
+						register_data(NPC_name,PC_name,'r_crit',m.param)
 					elseif m.message == 354 then --ranged miss
-						register_data(mob_player_table,'r_miss')
+						register_data(NPC_name,PC_name,'r_miss')
 					elseif m.message == 185 or m.message == 197 or m.message == 187 then --WS hit / drain
-						register_data(mob_player_table,'ws',m.param,'ws',act.param)
+						register_data(NPC_name,PC_name,'ws',m.param,'ws',act.param)
 						aoe_type = 'ws'
 					elseif m.message == 188 then --WS miss
-						register_data(mob_player_table,'ws_miss',nil,'ws',act.param)
+						register_data(NPC_name,PC_name,'ws_miss',nil,'ws',act.param)
 						aoe_type = 'ws'
 					elseif m.message == 2 or m.message == 227 then --spell
-						register_data(mob_player_table,'spell',m.param,'spell',act.param)
+						register_data(NPC_name,PC_name,'spell',m.param,'spell',act.param)
 						aoe_type = 'spell'
-                    elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 or m.message == 747 or m.message == 748 then --MB
-                        register_data(mob_player_table,'mb',m.param,'spell',act.param)
+					elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 or m.message == 747 or m.message == 748 then --MB
+						register_data(NPC_name,PC_name,'mb',m.param,'spell',act.param)
 						aoe_type = 'spell'
-                    elseif m.message == 82 or m.message == 236 or m.message == 754 or m.message == 755 then --enfeeb
-                        register_data(mob_player_table,'enfeeb',nil,'spell',act.param)
-                    elseif m.message == 85 or m.message == 284 or m.message == 653 or m.message == 654 or m.message == 655 or m.message == 656 then --resist enfeeb
-                        register_data(mob_player_table,'enfeeb_miss',nil,'spell',act.param)
+					elseif m.message == 82 or m.message == 236 or m.message == 754 or m.message == 755 then --enfeeb
+						register_data(NPC_name,PC_name,'enfeeb',nil,'spell',act.param)
+					elseif m.message == 85 or m.message == 284 or m.message == 653 or m.message == 654 or m.message == 655 or m.message == 656 then --resist enfeeb
+						register_data(NPC_name,PC_name,'enfeeb_miss',nil,'spell',act.param)
 					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
-						register_data(mob_player_table,'ja',m.param,'ja',act.param)
+						register_data(NPC_name,PC_name,'ja',m.param,'ja',act.param)
 						aoe_type = 'ja'
 					elseif m.message == 158 or m.message == 324 then --JA miss
-						register_data(mob_player_table,'ja_miss',nil,'ja',act.param)
+						register_data(NPC_name,PC_name,'ja_miss',nil,'ja',act.param)
 						aoe_type = 'ja'
 					elseif m.message == 157 then --Barrage
-						register_data(mob_player_table,'ja',m.param,'ja','Barrage')
+						register_data(NPC_name,PC_name,'ja',m.param,'ja','Barrage')
 					elseif m.message == 77 then --Sange
-						register_data(mob_player_table,'ja',m.param,'ja','Sange')
+						register_data(NPC_name,PC_name,'ja',m.param,'ja','Sange')
 					elseif m.message == 264 then --AoE damage
-						register_data(mob_player_table,aoe_type,m.param,aoe_type,act.param)
+						register_data(NPC_name,PC_name,aoe_type,m.param,aoe_type,act.param)
 					end
                     
                     
 					if m.has_add_effect and m.add_effect_message ~= 0 and add_effect_valid[act.category] then
 						if T{288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,385,386,387,388,389,390,391,392,393,394,395,396,397,398,732,767,768,769,770}:contains(m.add_effect_message) then
-							if not database[NPC_name]["SC-"..PC_name:sub(1, 3)..""] then
-								init_mob_player_table(NPC_name,"SC-"..PC_name:sub(1, 3).."")
-							end	
-							mob_player_table = database[NPC_name]["SC-"..PC_name:sub(1, 3)..""]							
-							register_data(mob_player_table,'sc',m.add_effect_param)
+							PC_name = "SC-"..PC_name:sub(1, 3)							
+							register_data(NPC_name,PC_name,'sc',m.add_effect_param)
 							if sc_messages and sc_messages[m.add_effect_message] then debug('sc ('..PC_name..') '..sc_messages[m.add_effect_message]..' '..m.add_effect_param) end
 						elseif T{161,163,229}:contains(m.add_effect_message) and m.add_effect_param > 0 then
-							register_data(mob_player_table,'add',m.add_effect_param)
+							register_data(NPC_name,PC_name,'add',m.add_effect_param)
 						end
 					end
 					
@@ -207,10 +197,10 @@ function parse_action_packet(act)
 	end
 	
 	if multihit_count and multihit_count > 0 then
-		register_data(mob_player_table,tostring(multihit_count))
+		register_data(NPC_name,PC_name,tostring(multihit_count))
 	end
 	if multihit_count2 and multihit_count2 > 0 then
-		register_data(mob_player_table,tostring(multihit_count2))
+		register_data(NPC_name,PC_name,tostring(multihit_count2))
 	end
 
 	-- Handle updating displays
@@ -260,7 +250,13 @@ function init_mob_player_table(mob_name,player_name)
 	database[mob_name][player_name] = {}	
 end
 
-function register_data(mob_player_table,stat,val,spell_type,spell_id)
+function register_data(NPC_name,PC_name,stat,val,spell_type,spell_id)    
+    if not database[NPC_name] or not database[NPC_name][PC_name] then						
+        init_mob_player_table(NPC_name,PC_name)
+    end
+    
+    local spell_name = nil
+    local mob_player_table = database[NPC_name][PC_name]
 	if not mob_player_table[get_stat_type(stat)] then
 		mob_player_table[get_stat_type(stat)] = {}
 	end
@@ -334,11 +330,14 @@ function register_data(mob_player_table,stat,val,spell_type,spell_id)
 					mob_player_table.total_damage = mob_player_table.total_damage + val
 				end
 			end
-		end
-		
+		end	
 	end
 
+    if val and settings.logger:find(function(el) if PC_name==el or (el:endswith('*') and PC_name:startswith(tostring(el:gsub('*','')))) then return true end return false end) then
+        log_data(PC_name,NPC_name,stat,val,spell_name)
+    end
 end
+
 
 function get_shield()
 	local current_equip = windower.ffxi.get_items().equipment

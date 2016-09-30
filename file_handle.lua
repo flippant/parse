@@ -7,6 +7,7 @@
 files = require('files')
 xml = require('xml')
 
+
 function import_parse(file_name)   
 	local path = '/data/export/'..file_name
 	
@@ -159,6 +160,27 @@ function construct_database(node, settings, key, meta)
     end
 
     return t
+end
+
+function log_data(player,mob,action_type,value,spellName)
+    if not windower.dir_exists(windower.addon_path..'data') then
+        windower.create_dir(windower.addon_path..'data')
+    end
+	if not windower.dir_exists(windower.addon_path..'data/log') then
+        windower.create_dir(windower.addon_path..'data/log')
+    end
+
+    local file = files.new('data/log/'..player..'_'..mob..'_'..action_type..'.log') 
+    if not file:exists() then
+        file:create()
+    end
+    
+    if not logs[player..'_'..mob..'_'..action_type] then
+        file:append(os.date('======= %H:%M:%S %p  %m-%d-%y =======')..'\n')
+        logs[player..'_'..mob..'_'..action_type] = true
+    end
+        
+    file:append('%s %s\n':format(spellName or '',value or ''))
 end
 
 --Copyright (c) 2013~2016, F.R
