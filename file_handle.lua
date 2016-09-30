@@ -163,14 +163,19 @@ function construct_database(node, settings, key, meta)
 end
 
 function log_data(player,mob,action_type,value,spellName)
+    if not logging then return end
+    
     if not windower.dir_exists(windower.addon_path..'data') then
         windower.create_dir(windower.addon_path..'data')
     end
 	if not windower.dir_exists(windower.addon_path..'data/log') then
         windower.create_dir(windower.addon_path..'data/log')
     end
+    if not windower.dir_exists(windower.addon_path..'data/log/'..windower.ffxi.get_player().name) then
+        windower.create_dir(windower.addon_path..'data/log/'..windower.ffxi.get_player().name)
+    end
 
-    local file = files.new('data/log/'..player..'_'..mob..'_'..action_type..'.log') 
+    local file = files.new('data/log/'..windower.ffxi.get_player().name..'/'..player..'_'..mob..'_'..action_type..'.log') 
     if not file:exists() then
         file:create()
     end

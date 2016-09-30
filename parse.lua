@@ -1,4 +1,4 @@
-_addon.version = '1.6'
+_addon.version = '1.61'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -114,6 +114,7 @@ update_tracker,update_interval = 0,settings.update_interval
 autoexport = nil
 autoexport_tracker,autoexport_interval = 0,settings.autoexport_interval
 pause = false
+logging = true
 buffs = {["Palisade"] = false, ["Reprisal"] = false, ["Battuta"] = false}
 
 database = {}
@@ -173,8 +174,6 @@ windower.register_event('addon command', function(...)
 	elseif args[1] == 'interval' then
 		if type(tonumber(args[2]))=='number' then update_tracker,update_interval = 0, tonumber(args[2]) end
 		message('Your current update interval is every '..update_interval..' actions.')
-	-- elseif args[1] == 'save' then
-		-- save_parse(args[2])
 	elseif args[1] == 'export' then
 		export_parse(args[2])
 	elseif args[1] == 'autoexport' then
@@ -187,18 +186,20 @@ windower.register_event('addon command', function(...)
 	elseif args[1] == 'import' and args[2] then
 		import_parse(args[2])
 		update_texts()
+    elseif args[1] == 'log' then
+        if logging then logging=false message('Logging has been turned off.') else logging=true message('Logging has been turned on.') end
 	elseif args[1] == 'help' then
 		message('report [stat] [chatmode] : Reports stat to designated chatmode. Defaults to damage.')
 		message('filter/f [add/+ | remove/- | clear/reset] [string] : Adds/removes/clears mob filter.')
 		message('show/s [melee/ranged/magic/defense] : Shows/hides display box. "melee" is the default.')
 		message('pause/p : Pauses/unpauses parse. When paused, data is not recorded.')
 		message('reset :  Resets parse.')
-		message('interval [number] :  Defines how many actions it takes before displays are updated.')
 		message('rename [player name] [new name] : Renames a player or monster for NEW incoming data.')
-		-- message('save [file name] : Saves parse to tab-delimited txt file. Filters are applied and data is collapsed.')
-		message('import/export [file name] : Imports/exports an XML file to/from database. Filters are applied permanently.')
+		message('import/export [file name] : Imports/exports an XML file to/from database. Only filtered monsters are exported.')
 		message('autoexport [file name] : Automatically exports an XML file every '..autoexport_interval..' recorded actions.')
+        message('log : Toggles logging feature.')
 		message('list/l [mobs/players] : Lists the mobs and players currently in the database. "mobs" is the default.')
+        message('interval [number] :  Defines how many actions it takes before displays are updated.')
 	else
 		message('That command was not found. Use //parse help for a list of commands.')
 	end
