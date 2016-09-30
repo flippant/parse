@@ -1,4 +1,4 @@
-# parse v1.6
+# parse v1.61
 An FFXI Parser Addon for Windower. This addon parses both offensive and defensive data, stores WS/JAs/spells data by individual spell, tracks additional information like multihit rates, and provides the ability to export/import data in XML format and log individually recorded data.
 
 ### Settings
@@ -58,6 +58,9 @@ Exports/imports data to/from the "parse/data/export" folder. Imported data is me
 `//parse autoexport [file name]`
 Automatically exports database every 500 actions. This interval can be changed in settings under autoexport_interval. Use command again with no file name, or 'off' to turn it off.
 
+`//parse log`
+Toggles logging.
+
 `//parse interval [number]`
 Changes the interval rate at which the display boxes are updated. The default is '1', meaning the displays (if visible) will update every recorded action. This function shouldn't be needed and was just a poor fix to an old problem, but if there are enough actions occuring to cause lag from the display calculations, this would alleive it. (Also, you could always hide the display.)
 
@@ -66,6 +69,6 @@ As opposed to export, which saves the in-game database to an XML file, logging r
 
 Logging data is automatic, as long as the player being recorded is listed in the logger option of your settings. This is case-sensitive, and wildcard (\*) at the end of a name is permitted (this allows defensive data to be recorded easily, despite changes in name due to special indexing).
 
-Data is saved to your /parse/data/log folder to a file according to player name, monster name, and stat (melee, ws, etc.). Data is *not* logged if it does not have a damage parameter—for example, it will not record parries, enfeebles, misses, etc. Category sections (ws, ja, spell, mb) will save the spell name next to the damage.
+Data is saved to /parse/data/log, in folders designated according to the *recording* player, to a file named after the recorded player, monster name, and stat (melee, ws, etc.). Data is *not* logged if it does not have a damage parameter—for example, it will not record parries, enfeebles, misses, etc. Category sections (ws, ja, spell, mb) will save the spell name next to the damage.
 
 If data has not been saved to that file since the last time Parse was loaded, it will first append time and date for quick reference.
