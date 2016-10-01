@@ -62,7 +62,7 @@ Automatically exports database every 500 actions. This interval can be changed i
 Toggles logging.
 
 `//parse interval [number]`
-Changes the interval rate at which the display boxes are updated. The default is '1', meaning the displays (if visible) will update every recorded action. This function shouldn't be needed and was just a poor fix to an old problem, but if there are enough actions occuring to cause lag from the display calculations, this would alleive it. (Also, you could always hide the display.)
+Changes the interval rate at which the display boxes are updated in seconds. Default interval is in settings.
 
 ### Logging
 As opposed to export, which saves the in-game database to an XML file, logging records each individual action's parameters to a file. For example, export will only save the total damage and total count of Flippant's Rudra's Storms against Wild Rabbits; but logging will save how much *each* Rudra's Storm did.
