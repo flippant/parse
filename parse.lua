@@ -1,4 +1,4 @@
-_addon.version = '1.61'
+_addon.version = '1.62'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
@@ -29,7 +29,7 @@ default_settings.record = {
 		["pet"] = true,
 		["fellow"] = true
 	}
-default_settings.logger = S{"Flipp*","Arcane"}
+default_settings.logger = S{"Flipp*"}
 default_settings.label = {
 		["player"] = {red=100,green=200,blue=200},
 		["stat"] = {red=225,green=150,blue=0},
@@ -354,6 +354,10 @@ function check_filters(filter_type,mob_name)
 	end
 	return response
 end
+
+config.register(settings, function(settings)
+    update_texts:loop(settings.update_interval)
+end)
 
 --Copyright (c) 2013~2016, F.R
 --All rights reserved.

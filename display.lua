@@ -18,12 +18,12 @@ function create_text(stat_type)
 	update_text(text_box[stat_type])
 end
 
-function update_text(stat_type)
+function update_text(stat_type)    
 	-- Don't update if box wasn't properly added, there are no settings, or it is not set to visible
-	if not text_box[stat_type] or not settings.display[stat_type] or not settings.display[stat_type].visible then
+	if not text_box[stat_type] or not settings.display[stat_type] or not settings.display[stat_type].visible or not windower.ffxi.get_info().logged_in then
 		return
 	end
-	
+
 	local info = {}
 	local head = L{}
 	local to_be_sorted = {}
