@@ -64,6 +64,52 @@ Toggles logging.
 `//parse interval [number]`
 Changes the interval rate at which the display boxes are updated in seconds. Default interval is in settings.
 
+### Display
+
+Up to four draggable, customizable UIs can appear on screen, "melee", "ranged", "magic", and "defense." The visibility of each one can be toggled in-game and the default visibility and visual appearance can be changed in the settings file.
+
+Despite their designated titles, attributes displayed on each of these are completely customizable from the settings. Any of recorded stats can be added to or removed from each of the displays, as well as the data type (total damage, average damage, percentage (how percentage is calculated depends on the stat), and tally).
+
+### Filtering
+
+Mob filters can be added/removed easily to filter data. Filters are used as substrings (not exact results) and are not case-sensitive. Multiple filters may be added. Note that special characters in monster names are stored differently: spaces are replaced with underscores and apostrophes are removed entirely. When in doubt, you can also use the list command to list all the monsters that have been registered in the current data set.
+
+If substring begins with '!' it will exclude any monsters with that substring. If substring begins with '^' it will only include exact matches. For example:
+
+* `schah` will include Schah and all of his minions.
+* `!schah` will exclude Schah and all of his minions (Schah's Bhata, etc.).
+* `^schah` will only include Schah, and not his minions. 
+* `!^schah` will exclude only Schah.
+
+### Report
+
+The report feature can be used to report either to a chat mode (including tells) or personal chatlog. All stats can be reported, including damage. When using this feature to report weaponskills, job abilities, and spells, results are shown both for the entire category and each individual ability/spell.
+
+### Renaming
+
+Both players and monsters can be "renamed" for new, incoming data. This can help you distinguish between multiple instanced enemies of the same name, or assist you when testing and comparing various situations.
+
+Always rename using the original name. For example, `//parse rename Kirin Kirin2; //parse rename Kirin Kirin3.` Also exclude any apostrophes and replace any spaces with underscore. Do not include Special Indexing (read more below).
+
+### Special Indexing
+
+Special features have been added specifically to assist parsing block rate and parry rate. Buff detection requires the addon to be loaded before you apply the buff. These can be enabled/disabled through settings.
+
+* Indexing by subweapon/shield, represented by the first three letters.
+* Indexing by Reprisal, represented with "R" when on.
+* Indexing by Palisade, represented with "P" when on.
+* Indexing by Battuta, represented with "B" when on.
+
+Note these features only work on the player's own character, and are appended after a name is potentially renamed.
+
+### Export/Import
+
+Parses can be exported to and imported from XML format so that you can view or continue a parse at any time. When importing, the imported data is merged with any current data.
+
+Data is saved according to mob filters, if there are any currently being used. Keep this in mind when exporting a parse, as any non-included monsters will not be saved.
+
+You can also toggle the autoexport command with //autoexport myFile. By using this command, the addon with automatically export after every 500 recordable actions. This can be useful when testing results while away from the computer for extended periods.
+
 ### Logging
 As opposed to export, which saves the in-game database to an XML file, logging records each individual action's parameters to a file. For example, export will only save the total damage and total count of Flippant's Rudra's Storms against Wild Rabbits; but logging will save how much *each* Rudra's Storm did.
 
