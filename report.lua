@@ -7,7 +7,7 @@
 ]]
 
 function report_data(stat,ability,chatmode,chattarget)
-	local valid_chatmodes = S{'s','p','t','l','l2'}
+	local valid_chatmodes = S{'s','p','t','l','l2','echo'}
 	-- If user doesn't enter a stat, then correct arguments
 	if not stat then
 		stat = 'damage'
