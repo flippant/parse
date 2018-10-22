@@ -14,19 +14,19 @@ function report_data(stat,ability,chatmode,chattarget)
 	elseif valid_chatmodes:contains(stat) then
 		chattarget = ability
 		chatmode = stat
-        ability = nil
+        	ability = nil
 		stat = 'damage'
-    elseif valid_chatmodes:contains(ability) then
-        chattarget = chatmode
-        chatmode = ability
-        ability = nil
+    	elseif valid_chatmodes:contains(ability) then
+        	chattarget = chatmode
+        	chatmode = ability
+        	ability = nil
 	end
 	if not valid_chatmodes[chatmode] then
 		chatmode = nil
 	end
 	if chatmode == 't' then
         if chattarget then
-            chat_prefix = chatmode..' '..chattarget
+        	chat_prefix = chatmode..' '..chattarget
         else message("Chat target not found.") end
 	else
 		chat_prefix = chatmode
