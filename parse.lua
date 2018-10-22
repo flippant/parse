@@ -1,4 +1,4 @@
-_addon.version = '1.62'
+_addon.version = '1.63'
 _addon.name = 'Parse'
 _addon.author = 'F'
 _addon.commands = {'parse','p'}
