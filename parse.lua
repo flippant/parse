@@ -127,7 +127,7 @@ text_box = {}
 logs = {}
 
 stat_types = {}
-stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry","nonblock"}
+stat_types.defense = S{"hit","block","evade","parry","intimidate","absorb","shadow","anticipate","nonparry","nonblock","retrate","nonret"}
 stat_types.melee = S{"melee","miss","crit"}
 stat_types.ranged = S{"ranged","r_miss","r_crit"}
 stat_types.category = S{"ws","ja","spell","mb","enfeeb","ws_miss","ja_miss","enfeeb_miss"}

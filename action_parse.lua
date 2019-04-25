@@ -92,6 +92,9 @@ function parse_action_packet(act)
 						if act.category == 1 then
 							register_data(NPC_name,PC_name,'nonblock',m.param)
 						end
+						if buffs.Retaliation and not m.has_spike_effect then
+							register_data(NPC_name,PC_name,'nonret')
+						end
 					elseif m.message == 67 then --crit
 						register_data(NPC_name,PC_name,'hit',m.param)
 						if target.status == 1 then
@@ -99,6 +102,9 @@ function parse_action_packet(act)
 						end
 						if act.category == 1 then
 							register_data(NPC_name,PC_name,'nonblock',m.param)
+						end
+						if buffs.Retaliation and not m.has_spike_effect then
+							register_data(NPC_name,PC_name,'nonret')
 						end
 					elseif m.message == 106 then  --intimidate
 						register_data(NPC_name,PC_name,'intimidate')
@@ -112,6 +118,9 @@ function parse_action_packet(act)
 					
 					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.)
 						register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
+						if m.spike_effect_message == 536 or m.spike_effect_message == 535 then
+							register_data(NPC_name,PC_name,'retrate')
+						end
 					end
 					--spike_effect_effect = 2 for counters
 
