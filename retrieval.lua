@@ -12,7 +12,7 @@ percent_table = {
 		anticipate = S{"hit","block"},
 		block = S{"nonblock"},
 		absorb = S{"hit","block"},
-		retrate = S{"hit","nonret"},
+		retrate = S{"nonret"},
 	
 		melee = S{"miss","+crit"},
 		crit = S{"melee"},

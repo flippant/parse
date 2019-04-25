@@ -117,7 +117,9 @@ function parse_action_packet(act)
 					end					
 					
 					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.)
-						register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
+						if m.spike_effect_param then
+							register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
+						end
 						if m.spike_effect_message == 536 or m.spike_effect_message == 535 then
 							register_data(NPC_name,PC_name,'retrate')
 						end
