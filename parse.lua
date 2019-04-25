@@ -115,7 +115,7 @@ autoexport = nil
 autoexport_tracker,autoexport_interval = 0,settings.autoexport_interval
 pause = false
 logging = true
-buffs = {["Palisade"] = false, ["Reprisal"] = false, ["Battuta"] = false}
+buffs = {["Palisade"] = false, ["Reprisal"] = false, ["Battuta"] = false, ["Retaliation"] = false}
 
 database = {}
 filters = {
@@ -205,23 +205,22 @@ windower.register_event('addon command', function(...)
 	end
 end )
 
+tracked_buffs = {
+	['403'] = "Reprisal",
+	['478'] = "Palisade",
+	['570'] = "Battuta",
+	['405'] = "Retaliation"
+}
+
 windower.register_event('gain buff', function(id)
-	if id==403 then -- Reprisal
-		buffs["Reprisal"] = true
-	elseif id==478 then -- Palisade
-		buffs["Palisade"] = true
-	elseif id==570 then -- Battuta
-		buffs["Battuta"] = true
+	if tracked_buffs[tostring(id)] then
+		buffs[tracked_buffs[tostring(id)]] = true
 	end
 end )
 
 windower.register_event('lose buff', function(id)
-	if id==403 then -- Reprisal
-		buffs["Reprisal"] = false
-	elseif id==478 then -- Palisade
-		buffs["Palisade"] = false
-	elseif id==570 then -- Battuta
-		buffs["Battuta"] = false
+	if tracked_buffs[tostring(id)] then
+		buffs[tracked_buffs[tostring(id)]] = true
 	end
 end )
 
