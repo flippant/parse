@@ -206,21 +206,21 @@ windower.register_event('addon command', function(...)
 end )
 
 tracked_buffs = {
-	['403'] = "Reprisal",
-	['478'] = "Palisade",
-	['570'] = "Battuta",
-	['405'] = "Retaliation"
+	[403] = "Reprisal",
+	[478] = "Palisade",
+	[570] = "Battuta",
+	[405] = "Retaliation"
 }
 
 windower.register_event('gain buff', function(id)
-	if tracked_buffs[tostring(id)] then
-		buffs[tracked_buffs[tostring(id)]] = true
+	if tracked_buffs[id] then
+		buffs[tracked_buffs[id]] = true
 	end
 end )
 
 windower.register_event('lose buff', function(id)
-	if tracked_buffs[tostring(id)] then
-		buffs[tracked_buffs[tostring(id)]] = true
+	if tracked_buffs[id] then
+		buffs[tracked_buffs[id]] = true
 	end
 end )
 
