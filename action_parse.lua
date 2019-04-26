@@ -7,7 +7,9 @@
 ]]
 spike_effect_valid = {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false}
 add_effect_valid = {true,true,true,true,false,false,false,false,false,false,true,false,true,false,false}
-sc_messages = {
+skillchain_messages = T{288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,385,386,387,388,389,390,391,392,393,394,395,396,397,398,732,767,768,769,770}
+add_effect_messages = T{161,163,229}
+skillchain_names = {
     [288] = "Skillchain: Light",
     [289] = "Skillchain: Darkness",
     [290] = "Skillchain: Gravitation",
@@ -43,6 +45,33 @@ sc_messages = {
     [769] = "Skillchain: Radiance",
     [770] = "Skillchain: Umbra",
 }
+local defense_action_messages = {
+	1 = 'hit',
+	67 = 'hit', --crit
+	106 = 'intimidate', 
+	15 = 'evade', 282 = 'evade',
+	373 = 'absorb',
+	536 = 'retaliate', 535 = 'retaliate'
+}
+local offense_action_messages = {
+	1 = 'melee',
+	67 = 'crit',
+	15 = 'miss', 63 = 'miss',
+	352 = 'ranged', 576 = 'ranged', 577 = 'ranged',
+	353 = 'r_crit',
+	354 = 'r_miss',
+	185 = 'ws', 197 = 'ws', 187 = 'ws',
+	188 = 'ws_miss',
+	2 = 'spell', 227 = 'spell',
+	252 = 'mb', 265 = 'mb', 274 = 'mb', 379 = 'mb', 747 = 'mb', 748 = 'mb',
+	82 = 'enfeeb', 236 = 'enfeeb', 754 = 'enfeeb', 755 = 'enfeeb',
+	85 = 'enfeeb_miss', 284 = 'enfeeb_miss', 653 = 'enfeeb_miss', 654 = 'enfeeb_miss', 655 = 'enfeeb_miss', 656 = 'enfeeb_miss',
+	110 = 'ja', 317 = 'ja', 522 = 'ja',
+	158 = 'ja_miss', 324 = 'ja_miss',
+	157 = 'Barrage',
+	77 = 'Sange',
+	264 = 'aoe'
+}
                         
 function parse_action_packet(act)
 	if pause then return end
@@ -77,124 +106,84 @@ function parse_action_packet(act)
 						if settings.index_battuta and buffs.Battuta then PC_name = PC_name .. 'B' end
 					end
 
+					local action = defense_action_messages[m.message]
+					local engaged = (target.status==1) and true or false
+
 					if m.reaction == 12 and act.category == 1 then  --block
 						register_data(NPC_name,PC_name,'block',m.param)
-						if target.status == 1 then
+						if engaged then
 							register_data(NPC_name,PC_name,'nonparry')
 						end
 					elseif m.reaction == 11 and act.category == 1 then  --parry
 						register_data(NPC_name,PC_name,'parry')
-					elseif m.message == 1 then --hit
-						register_data(NPC_name,PC_name,'hit',m.param)
-						if target.status == 1 then
+					elseif action == 'hit' then --hit or crit
+						register_data(NPC_name,PC_name,action,m.param)
+						if engaged then
 							register_data(NPC_name,PC_name,'nonparry')
+							if buffs.Retaliation and not m.has_spike_effect then
+								register_data(NPC_name,PC_name,'nonret')
+							end
 						end
 						if act.category == 1 then
 							register_data(NPC_name,PC_name,'nonblock',m.param)
 						end
-						if buffs.Retaliation and not m.has_spike_effect then
-							register_data(NPC_name,PC_name,'nonret')
-						end
-					elseif m.message == 67 then --crit
-						register_data(NPC_name,PC_name,'hit',m.param)
-						if target.status == 1 then
-							register_data(NPC_name,PC_name,'nonparry')
-						end
-						if act.category == 1 then
-							register_data(NPC_name,PC_name,'nonblock',m.param)
-						end
-						if buffs.Retaliation and not m.has_spike_effect then
-							register_data(NPC_name,PC_name,'nonret')
-						end
-					elseif m.message == 106 then  --intimidate
-						register_data(NPC_name,PC_name,'intimidate')
-					elseif m.message == 15 or m.message == 282 then --evade
-						register_data(NPC_name,PC_name,'evade')
+					elseif T{'intimidate','evade'} then  --intimidate
+						register_data(NPC_name,PC_name,action)
 					end
 
-					if m.message == 373 then  --absorb (can happen during block)
+					if action == 'absorb' then  --absorb (can happen during block)
 						register_data(NPC_name,PC_name,'absorb',m.param)
 					end					
 					
-					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.)
+					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.) spike_effect_effect = 2 for counters
+						local spike_action = action_messages[tostring(m.spike_effect_message)]
 						if m.spike_effect_param then
 							register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
 						end
-						if m.spike_effect_message == 536 or m.spike_effect_message == 535 then
+						if spike_action == 'retaliate' then
 							register_data(NPC_name,PC_name,'retrate')
 						end
 					end
-					--spike_effect_effect = 2 for counters
-
+					
 				-- if player is actor, record offensive data
 				elseif target.type == 'mob' and settings.record[act.actor.type] then
 					NPC_name = nickname(target.name:gsub(" ","_"):gsub("'",""))
 					PC_name = construct_PC_name(act.actor)
 
-					if m.message == 1 then --melee
-						register_data(NPC_name,PC_name,'melee',m.param)
-						if m.animation==0 then
+					local action = offense_action_messages[m.message]
+
+					if T{'melee','crit','miss'}:contains(action) then
+						register_data(NPC_name,PC_name,action,m.param)
+						if m.animation==0 then --main hand
 							multihit_count = multihit_count + 1
-						elseif m.animation==1 then
+						elseif m.animation==1 then --off hand
 							multihit_count2 = multihit_count2 + 1
-						end
-					elseif m.message == 67 then --crit
-						register_data(NPC_name,PC_name,'crit',m.param)
-						if m.animation==0 then
-							multihit_count = multihit_count + 1
-						elseif m.animation==1 then
-							multihit_count2 = multihit_count2 + 1
-						end						
-					elseif m.message == 15 or m.message == 63 then --miss
-						register_data(NPC_name,PC_name,'miss')
-						if m.animation==0 then
-							multihit_count = multihit_count + 1
-						elseif m.animation==1 then
-							multihit_count2 = multihit_count2 + 1
-						end
-					elseif T{352, 576, 577}:contains(m.message) then --ranged
-						register_data(NPC_name,PC_name,'ranged',m.param)
-					elseif m.message == 353 then --ranged crit
-						register_data(NPC_name,PC_name,'r_crit',m.param)
-					elseif m.message == 354 then --ranged miss
-						register_data(NPC_name,PC_name,'r_miss')
-					elseif m.message == 185 or m.message == 197 or m.message == 187 then --WS hit / drain
-						register_data(NPC_name,PC_name,'ws',m.param,'ws',act.param)
+						end	
+					elseif T{'ranged','r_crit','r_miss'}:contains(action) then
+						register_data(NPC_name,PC_name,action,m.param)
+					elseif T{'ws','ws_miss'}:contains(action) then
+						register_data(NPC_name,PC_name,action,m.param,'ws',act.param)
 						aoe_type = 'ws'
-					elseif m.message == 188 then --WS miss
-						register_data(NPC_name,PC_name,'ws_miss',nil,'ws',act.param)
-						aoe_type = 'ws'
-					elseif m.message == 2 or m.message == 227 then --spell
-						register_data(NPC_name,PC_name,'spell',m.param,'spell',act.param)
+					elseif T{'spell','mb'}:contains(action) then
+						register_data(NPC_name,PC_name,action,m.param,'spell',act.param)
 						aoe_type = 'spell'
-					elseif m.message == 252 or m.message == 265 or m.message == 274 or m.message == 379 or m.message == 747 or m.message == 748 then --MB
-						register_data(NPC_name,PC_name,'mb',m.param,'spell',act.param)
-						aoe_type = 'spell'
-					elseif m.message == 82 or m.message == 236 or m.message == 754 or m.message == 755 then --enfeeb
-						register_data(NPC_name,PC_name,'enfeeb',nil,'spell',act.param)
-					elseif m.message == 85 or m.message == 284 or m.message == 653 or m.message == 654 or m.message == 655 or m.message == 656 then --resist enfeeb
-						register_data(NPC_name,PC_name,'enfeeb_miss',nil,'spell',act.param)
-					elseif m.message == 110 or m.message == 317 or m.message == 522 then --JA
-						register_data(NPC_name,PC_name,'ja',m.param,'ja',act.param)
+					elseif T{'enfeeb','enfeeb_miss'}:contains(action) then
+						register_data(NPC_name,PC_name,action,nil,'spell',act.param)
+					elseif T{'ja','ja_miss'}:contains(action) then
+						register_data(NPC_name,PC_name,action,m.param,'ja',act.param)
 						aoe_type = 'ja'
-					elseif m.message == 158 or m.message == 324 then --JA miss
-						register_data(NPC_name,PC_name,'ja_miss',nil,'ja',act.param)
-						aoe_type = 'ja'
-					elseif m.message == 157 then --Barrage
-						register_data(NPC_name,PC_name,'ja',m.param,'ja','Barrage')
-					elseif m.message == 77 then --Sange
-						register_data(NPC_name,PC_name,'ja',m.param,'ja','Sange')
-					elseif m.message == 264 then --AoE damage
+					elseif T{'Barrage','Sange'}:contains(action) then
+						register_data(NPC_name,PC_name,'ja',m.param,'ja',action)
+					elseif action == 'aoe' then
 						register_data(NPC_name,PC_name,aoe_type,m.param,aoe_type,act.param)
 					end
-                    
-                    
+
 					if m.has_add_effect and m.add_effect_message ~= 0 and add_effect_valid[act.category] then
-						if T{288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,385,386,387,388,389,390,391,392,393,394,395,396,397,398,732,767,768,769,770}:contains(m.add_effect_message) then
+						if skillchain_messages:contains(m.add_effect_message) then
 							PC_name = "SC-"..PC_name:sub(1, 3)							
 							register_data(NPC_name,PC_name,'sc',m.add_effect_param)
-							if sc_messages and sc_messages[m.add_effect_message] then debug('sc ('..PC_name..') '..sc_messages[m.add_effect_message]..' '..m.add_effect_param) end
-						elseif T{161,163,229}:contains(m.add_effect_message) and m.add_effect_param > 0 then
+							if skillchain_names and skillchain_names[m.add_effect_message] then debug('sc ('..PC_name..') '..skillchain_names[m.add_effect_message]..' '..m.add_effect_param) end
+						elseif add_effect_messages:contains(m.add_effect_message) and m.add_effect_param > 0 then
 							register_data(NPC_name,PC_name,'add',m.add_effect_param)
 						end
 					end
@@ -260,13 +249,19 @@ function register_data(NPC_name,PC_name,stat,val,spell_type,spell_id)
         init_mob_player_table(NPC_name,PC_name)
     end
     
-    local spell_name = nil
+	local spell_name = nil
+	local stat_type = get_stat_type(stat)
+
     local mob_player_table = database[NPC_name][PC_name]
-	if not mob_player_table[get_stat_type(stat)] then
-		mob_player_table[get_stat_type(stat)] = {}
+	if not mob_player_table[stat_type] then
+		mob_player_table[stat_type] = {}
+	end
+
+	if not mob_player_table[stat_type][stat] then
+		mob_player_table[stat_type][stat] = {}
 	end
 	
-	if get_stat_type(stat) == "category" then --handle WS, spells, and JA
+	if stat_type == "category" then --handle WS, spells, and JA
 		if type(spell_id) == 'number' then
 			if spell_type == "ws" and res.weapon_skills[spell_id] then spell_name = res.weapon_skills[spell_id].english
 			elseif spell_type == "ja" and res.job_abilities[spell_id] then spell_name = res.job_abilities[spell_id].english
@@ -281,25 +276,17 @@ function register_data(NPC_name,PC_name,stat,val,spell_type,spell_id)
 		
 		spell_name = spell_name:gsub(" ","_"):gsub("'",""):gsub(":","")
 		
-		if not mob_player_table[get_stat_type(stat)][stat] then
-			mob_player_table[get_stat_type(stat)][stat] = {}
+		if not mob_player_table[stat_type][stat][spell_name] then
+			mob_player_table[stat_type][stat][spell_name] = {['tally'] = 0}
 		end
 		
-		if not mob_player_table[get_stat_type(stat)][stat][spell_name] then
-			mob_player_table[get_stat_type(stat)][stat][spell_name] = {}
-		end
-		
-		if not mob_player_table[get_stat_type(stat)][stat][spell_name].tally then
-			mob_player_table[get_stat_type(stat)][stat][spell_name].tally = 0 
-		end
-		
-		mob_player_table[get_stat_type(stat)][stat][spell_name].tally = mob_player_table[get_stat_type(stat)][stat][spell_name].tally + 1
+		mob_player_table[stat_type][stat][spell_name].tally = mob_player_table[stat_type][stat][spell_name].tally + 1
 		
 		if val then
-			if not mob_player_table[get_stat_type(stat)][stat][spell_name].damage then
-				mob_player_table[get_stat_type(stat)][stat][spell_name].damage = val
+			if not mob_player_table[stat_type][stat][spell_name].damage then
+				mob_player_table[stat_type][stat][spell_name].damage = val
 			else
-				mob_player_table[get_stat_type(stat)][stat][spell_name].damage = mob_player_table[get_stat_type(stat)][stat][spell_name].damage + val
+				mob_player_table[stat_type][stat][spell_name].damage = mob_player_table[stat_type][stat][spell_name].damage + val
 			end
 			
 			if damage_types:contains(stat) then
@@ -311,21 +298,17 @@ function register_data(NPC_name,PC_name,stat,val,spell_type,spell_id)
 			end
 		end
 	else --handle everything else
-		if not mob_player_table[get_stat_type(stat)][stat] then
-			mob_player_table[get_stat_type(stat)][stat] = {}
+		if not mob_player_table[stat_type][stat].tally then
+			mob_player_table[stat_type][stat].tally = 0 
 		end
 		
-		if not mob_player_table[get_stat_type(stat)][stat].tally then
-			mob_player_table[get_stat_type(stat)][stat].tally = 0 
-		end
-		
-		mob_player_table[get_stat_type(stat)][stat].tally = mob_player_table[get_stat_type(stat)][stat].tally + 1
+		mob_player_table[stat_type][stat].tally = mob_player_table[stat_type][stat].tally + 1
 		
 		if val then
-			if not mob_player_table[get_stat_type(stat)][stat].damage then
-				mob_player_table[get_stat_type(stat)][stat].damage = val
+			if not mob_player_table[stat_type][stat].damage then
+				mob_player_table[stat_type][stat].damage = val
 			else
-				mob_player_table[get_stat_type(stat)][stat].damage = mob_player_table[get_stat_type(stat)][stat].damage + val
+				mob_player_table[stat_type][stat].damage = mob_player_table[stat_type][stat].damage + val
 			end
 			
 			if damage_types:contains(stat) then
