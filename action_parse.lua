@@ -127,7 +127,7 @@ function parse_action_packet(act)
 						if act.category == 1 then
 							register_data(NPC_name,PC_name,'nonblock',m.param)
 						end
-					elseif T{'intimidate','evade'} then  --intimidate
+					elseif T{'intimidate','evade'}:contains(action) then  --intimidate
 						register_data(NPC_name,PC_name,action)
 					end
 
@@ -250,7 +250,7 @@ function register_data(NPC_name,PC_name,stat,val,spell_type,spell_id)
     end
     
 	local spell_name = nil
-	local stat_type = get_stat_type(stat)
+	local stat_type = get_stat_type(stat) or 'unknown'
 
     local mob_player_table = database[NPC_name][PC_name]
 	if not mob_player_table[stat_type] then
