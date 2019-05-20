@@ -136,7 +136,7 @@ function parse_action_packet(act)
 					end					
 					
 					if m.has_spike_effect then --offensive data (when player has Reprisal or counters, etc.) spike_effect_effect = 2 for counters
-						local spike_action = action_messages[tostring(m.spike_effect_message)]
+						local spike_action = defense_action_messages[m.spike_effect_message]
 						if m.spike_effect_param then
 							register_data(NPC_name,PC_name,'spike',m.spike_effect_param)
 						end
