@@ -1,6 +1,6 @@
 _addon.version = '1.63'
 _addon.name = 'Parse'
-_addon.author = 'F'
+_addon.author = 'Flippant'
 _addon.commands = {'parse','p'}
 
 require 'tables'
