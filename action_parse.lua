@@ -222,7 +222,7 @@ function construct_PC_name(PC)
         else
             result = name
         end
-        result = result..'-'..string.sub(nickname(PC.owner.name), 1, 3)..''
+        result = result..'-'..string.sub(nickname(PC.owner.name), 1, 4)..''
     else
         result = nickname(name)
     end
