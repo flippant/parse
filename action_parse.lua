@@ -54,7 +54,7 @@ local defense_action_messages = {
 	[536] = 'retaliate', [535] = 'retaliate'
 }
 local offense_action_messages = {
-	[1] = 'melee',
+	[1] = 'melee', [802] = 'melee',
 	[67] = 'crit',
 	[15] = 'miss', [63] = 'miss',
 	[352] = 'ranged', [576] = 'ranged', [577] = 'ranged',
