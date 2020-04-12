@@ -54,7 +54,7 @@ local defense_action_messages = {
 	[536] = 'retaliate', [535] = 'retaliate'
 }
 local offense_action_messages = {
-	[1] = 'melee', [802] = 'melee',
+	[1] = 'melee',
 	[67] = 'crit',
 	[15] = 'miss', [63] = 'miss',
 	[352] = 'ranged', [576] = 'ranged', [577] = 'ranged',
@@ -66,7 +66,7 @@ local offense_action_messages = {
 	[252] = 'mb', [265] = 'mb', [274] = 'mb', [379] = 'mb', [747] = 'mb', [748] = 'mb',
 	[82] = 'enfeeb', [236] = 'enfeeb', [754] = 'enfeeb', [755] = 'enfeeb',
 	[85] = 'enfeeb_miss', [284] = 'enfeeb_miss', [653] = 'enfeeb_miss', [654] = 'enfeeb_miss', [655] = 'enfeeb_miss', [656] = 'enfeeb_miss',
-	[110] = 'ja', [317] = 'ja', [522] = 'ja',
+	[110] = 'ja', [317] = 'ja', [522] = 'ja', [802] = 'ja',
 	[158] = 'ja_miss', [324] = 'ja_miss',
 	[157] = 'Barrage',
 	[77] = 'Sange',
