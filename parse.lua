@@ -48,7 +48,8 @@ default_settings.display.melee = {
 			["crit"] = S{'percent'},
 			["ws"] = S{'avg'},
 			["ja"] = S{'avg'},
-			["multi"] = S{'avg'}
+			["multi"] = S{'avg'},
+			["ws_miss"] = S{'tally'}
 		},
 		["bg"] = {visible=true,alpha=50,red=0,green=0,blue=0},
 		["text"] = {size=10,font="consolas",alpha=255,red=255,green=255,blue=255,stroke={width=1,alpha=200,red=0,green=0,blue=0}},
